@@ -21,7 +21,7 @@ fun MainScreen(
     }
 }
 
-@Preview
+@DevicePreviews
 @Composable
 fun MainScreenPreview(){
     MainScreen()
