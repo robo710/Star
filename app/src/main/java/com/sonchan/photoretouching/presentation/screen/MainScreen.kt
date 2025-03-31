@@ -17,7 +17,6 @@ fun MainScreen(
             .background(color = Color(0xFFFFFFFF))
             .fillMaxSize()
     ){
-        Text(text = "hello")
     }
 }
 
