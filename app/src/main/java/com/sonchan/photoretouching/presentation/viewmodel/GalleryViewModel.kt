@@ -3,7 +3,6 @@ package com.sonchan.photoretouching.presentation.viewmodel
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sonchan.photoretouching.domain.usecase.main.GetGalleryImageUseCase
 import com.sonchan.photoretouching.domain.usecase.main.SetGalleryImageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
