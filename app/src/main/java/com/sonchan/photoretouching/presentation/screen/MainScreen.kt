@@ -57,15 +57,17 @@ fun MainScreen(
         HorizontalDivider(thickness = 1.dp, color = Color.Gray)
 
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().weight(1f),
             contentAlignment = Alignment.Center
         ) {
             imageUri?.let {
                 Image(
                     painter = rememberAsyncImagePainter(it),
                     contentDescription = "Selected Image",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .aspectRatio(1f),
+                    contentScale = ContentScale.Fit
                 )
             } ?: Text(
                 "이미지를 선택하세요",
