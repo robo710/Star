@@ -1,7 +1,9 @@
 package com.sonchan.photoretouching.domain.repository.main
 
 import android.net.Uri
+import kotlinx.coroutines.flow.Flow
 
 interface GalleryRepository {
-    suspend fun getGalleryImage(): Uri?
+    fun getGalleryImage(): Flow<Uri?>
+    fun setGalleryImage(uri: Uri?)
 }

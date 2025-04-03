@@ -4,5 +4,6 @@ import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 
 interface GalleryDataSource {
-    fun getGalleryImage(): Flow<Uri?>
+    val imageUri: Flow<Uri?>
+    fun setImageUri(uri: Uri?)
 }
