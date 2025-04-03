@@ -6,14 +6,25 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,7 +38,6 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     viewModel: GalleryViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     val imageUri by viewModel.imageUri.collectAsState()
 
     // 갤러리에서 이미지 선택하는 런처
@@ -35,6 +45,12 @@ fun MainScreen(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let { viewModel.updateGalleryImage(it) } // 선택한 이미지 URI를 ViewModel에 저장
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.openGalleryEvent.collect{
+            galleryLauncher.launch("image/*")
+        }
     }
 
     Column(
@@ -45,7 +61,7 @@ fun MainScreen(
             modifier = Modifier.fillMaxWidth().height(50.dp)
         ) {
             Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = { galleryLauncher.launch("image/*") }) { // ✅ 버튼 클릭 시 갤러리 실행
+            IconButton(onClick = { viewModel.requestOpenGallery() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.add_icon),
                     contentDescription = "Select Image",
@@ -56,22 +72,22 @@ fun MainScreen(
 
         HorizontalDivider(thickness = 1.dp, color = Color.Gray)
 
-        Box(
-            modifier = Modifier.fillMaxSize().weight(1f),
+        imageUri?.let {
+            Image(
+                painter = rememberAsyncImagePainter(it),
+                contentDescription = "Selected Image",
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentScale = ContentScale.Fit
+            )
+        } ?: Box(
+            Modifier
+                .fillMaxSize()
+                .clickable { galleryLauncher.launch("image/*") },
             contentAlignment = Alignment.Center
         ) {
-            imageUri?.let {
-                Image(
-                    painter = rememberAsyncImagePainter(it),
-                    contentDescription = "Selected Image",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .aspectRatio(1f),
-                    contentScale = ContentScale.Fit
-                )
-            } ?: Text(
+            Text(
                 "이미지를 선택하세요",
-                Modifier.clickable { galleryLauncher.launch("image/*") }
             )
         }
     }
