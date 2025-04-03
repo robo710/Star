@@ -47,7 +47,7 @@ fun MainRoute(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.onGalleryRequest = {
+        viewModel.openGalleryEvent.collect {
             galleryLauncher.launch("image/*")
         }
     }
