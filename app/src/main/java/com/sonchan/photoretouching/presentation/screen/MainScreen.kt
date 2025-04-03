@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -25,11 +25,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.presentation.viewmodel.GalleryViewModel
+import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
 
 @Composable
 fun MainScreen(
-    viewModel: GalleryViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: GalleryViewModel = hiltViewModel()
 ) {
     val imageUri by viewModel.imageUri.collectAsState()
 
@@ -55,7 +56,7 @@ fun MainScreen(
             }
         }
 
-        Divider(thickness = 1.dp, color = Color.Gray)
+        HorizontalDivider(thickness = 1.dp, color = Color.Gray)
 
         Box(
             modifier = modifier.fillMaxWidth(),
@@ -70,5 +71,13 @@ fun MainScreen(
                 )
             }
         }
+    }
+}
+
+@DevicePreviews
+@Composable
+fun MainScreenPreview(){
+    PhotoRetouchingTheme {
+        MainScreen()
     }
 }
