@@ -25,7 +25,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.presentation.viewmodel.GalleryViewModel
-import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
 
 @Composable
 fun MainScreen(
@@ -71,13 +70,5 @@ fun MainScreen(
                 )
             }
         }
-    }
-}
-
-@DevicePreviews
-@Composable
-fun MainScreenPreview(){
-    PhotoRetouchingTheme {
-        MainScreen()
     }
 }
