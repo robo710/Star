@@ -3,7 +3,6 @@ package com.sonchan.photoretouching.presentation.viewmodel
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sonchan.photoretouching.domain.usecase.main.GetGalleryImageUseCase
 import com.sonchan.photoretouching.domain.usecase.main.SetGalleryImageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +24,7 @@ class GalleryViewModel @Inject constructor(
     private val _imageUri = MutableStateFlow<Uri?>(null)
     val imageUri: StateFlow<Uri?> = _imageUri
 
-    private val _openGalleryEvent = MutableSharedFlow<Unit>()
+    private val _openGalleryEvent = MutableSharedFlow<Unit>() // 이벤트 트리거 용도
     val openGalleryEvent: SharedFlow<Unit> = _openGalleryEvent
 
     init {
