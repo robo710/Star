@@ -32,23 +32,42 @@ import coil.compose.rememberAsyncImagePainter
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.presentation.viewmodel.GalleryViewModel
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
-fun MainScreen(
+fun MainRoute(
     modifier: Modifier = Modifier,
     viewModel: GalleryViewModel = hiltViewModel()
 ) {
     val imageUri by viewModel.imageUri.collectAsState()
 
-    // 갤러리에서 이미지 선택하는 런처
+    MainScreen(
+        modifier = modifier,
+        onGalleryOpenRequest = { viewModel.requestOpenGallery() },
+        onImageSelected = { uri -> viewModel.updateGalleryImage(uri) },
+        imageUri = imageUri,
+        openGalleryEvent = viewModel.openGalleryEvent
+    )
+}
+
+@Composable
+fun MainScreen(
+    modifier: Modifier = Modifier,
+    onGalleryOpenRequest: () -> Unit,
+    onImageSelected: (Uri) -> Unit,
+    imageUri: Uri?,
+    openGalleryEvent: SharedFlow<Unit>
+) {
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let { viewModel.updateGalleryImage(it) } // 선택한 이미지 URI를 ViewModel에 저장
+        uri?.let { onImageSelected(it) }
     }
 
+    // 🔥 ViewModel의 이벤트를 감지해서 갤러리를 실행
     LaunchedEffect(Unit) {
-        viewModel.openGalleryEvent.collect{
+        openGalleryEvent.collect {
             galleryLauncher.launch("image/*")
         }
     }
@@ -61,7 +80,7 @@ fun MainScreen(
             modifier = Modifier.fillMaxWidth().height(50.dp)
         ) {
             Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = { viewModel.requestOpenGallery() }) {
+            IconButton(onClick = { onGalleryOpenRequest() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.add_icon),
                     contentDescription = "Select Image",
@@ -76,19 +95,16 @@ fun MainScreen(
             Image(
                 painter = rememberAsyncImagePainter(it),
                 contentDescription = "Selected Image",
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Fit
             )
         } ?: Box(
             Modifier
                 .fillMaxSize()
-                .clickable { galleryLauncher.launch("image/*") },
+                .clickable { onGalleryOpenRequest() },
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                "이미지를 선택하세요",
-            )
+            Text("이미지를 선택하세요")
         }
     }
 }
@@ -96,8 +112,15 @@ fun MainScreen(
 
 @DevicePreviews
 @Composable
-fun MainScreenPreview(){
+fun MainScreenPreview() {
+    val dummySharedFlow: SharedFlow<Unit> = MutableSharedFlow()
+
     PhotoRetouchingTheme {
-        MainScreen()
+        MainScreen(
+            onGalleryOpenRequest = {},
+            imageUri = null,
+            onImageSelected = {},
+            openGalleryEvent = dummySharedFlow,
+        )
     }
 }
