@@ -13,11 +13,11 @@ import javax.inject.Inject
 class GalleryRepositoryImpl @Inject constructor(
     private val galleryDataSource: GalleryDataSource
 ): GalleryRepository {
-    override suspend fun getGalleryImage(): Flow<Uri?> {
+    override fun getGalleryImage(): Flow<Uri?> {
         return galleryDataSource.imageUri
     }
 
-    override suspend fun setGalleryImage(uri: Uri?) {
+    override  fun setGalleryImage(uri: Uri?) {
         return galleryDataSource.setImageUri(uri)
     }
 }
