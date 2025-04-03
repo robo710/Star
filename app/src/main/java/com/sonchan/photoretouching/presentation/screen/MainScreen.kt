@@ -32,8 +32,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.presentation.viewmodel.GalleryViewModel
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
 fun MainRoute(
@@ -42,12 +40,22 @@ fun MainRoute(
 ) {
     val imageUri by viewModel.imageUri.collectAsState()
 
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { viewModel.updateGalleryImage(it) }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.onGalleryRequest = {
+            galleryLauncher.launch("image/*")
+        }
+    }
+
     MainScreen(
         modifier = modifier,
         onGalleryOpenRequest = { viewModel.requestOpenGallery() },
-        onImageSelected = { uri -> viewModel.updateGalleryImage(uri) },
-        imageUri = imageUri,
-        openGalleryEvent = viewModel.openGalleryEvent
+        imageUri = imageUri
     )
 }
 
@@ -55,23 +63,8 @@ fun MainRoute(
 fun MainScreen(
     modifier: Modifier = Modifier,
     onGalleryOpenRequest: () -> Unit,
-    onImageSelected: (Uri) -> Unit,
-    imageUri: Uri?,
-    openGalleryEvent: SharedFlow<Unit>
+    imageUri: Uri?
 ) {
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let { onImageSelected(it) }
-    }
-
-    // 🔥 ViewModel의 이벤트를 감지해서 갤러리를 실행
-    LaunchedEffect(Unit) {
-        openGalleryEvent.collect {
-            galleryLauncher.launch("image/*")
-        }
-    }
-
     Column(
         modifier = modifier.fillMaxSize().background(Color.White)
     ) {
@@ -113,14 +106,10 @@ fun MainScreen(
 @DevicePreviews
 @Composable
 fun MainScreenPreview() {
-    val dummySharedFlow: SharedFlow<Unit> = MutableSharedFlow()
-
     PhotoRetouchingTheme {
         MainScreen(
             onGalleryOpenRequest = {},
             imageUri = null,
-            onImageSelected = {},
-            openGalleryEvent = dummySharedFlow,
         )
     }
 }

@@ -25,8 +25,7 @@ class GalleryViewModel @Inject constructor(
     private val _imageUri = MutableStateFlow<Uri?>(null)
     val imageUri: StateFlow<Uri?> = _imageUri
 
-    private val _openGalleryEvent = MutableSharedFlow<Unit>()
-    val openGalleryEvent: SharedFlow<Unit> = _openGalleryEvent
+    var onGalleryRequest: (() -> Unit)? = null // 갤러리 열기 요청을 위한 Callback
 
     init {
         observeGalleryImage()
@@ -45,8 +44,6 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun requestOpenGallery(){
-        viewModelScope.launch {
-            _openGalleryEvent.emit(Unit)
-        }
+        onGalleryRequest?.invoke() // ViewModel에서 갤러리를 실행할 수 있도록 Callback 호출
     }
 }
