@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -66,13 +67,18 @@ fun RetouchingScreen(
     imageUri: Uri?
 ) {
     Column(
-        modifier = modifier.fillMaxSize().background(Color.White)
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .systemBarsPadding()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().height(50.dp)
+            modifier = modifier
+                .fillMaxWidth()
+                .height(50.dp)
         ) {
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = modifier.weight(1f))
             IconButton(onClick = {/*TODO*/}) {
                 Icon(
                     painter = painterResource(R.drawable.download_icon),
@@ -95,11 +101,11 @@ fun RetouchingScreen(
             Image(
                 painter = rememberAsyncImagePainter(it),
                 contentDescription = "Selected Image",
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 contentScale = ContentScale.Fit
             )
         } ?: Box(
-            Modifier
+            modifier
                 .fillMaxSize()
                 .clickable { onGalleryOpenRequest() },
             contentAlignment = Alignment.Center
