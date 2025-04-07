@@ -22,9 +22,9 @@ class GalleryViewModel @Inject constructor(
 ): ViewModel() {
 
     private val _imageUri = MutableStateFlow<Uri?>(null)
-    val imageUri: StateFlow<Uri?> = _imageUri
-
     private val _openGalleryEvent = MutableSharedFlow<Unit>() // 이벤트 트리거 용도
+
+    val imageUri: StateFlow<Uri?> = _imageUri
     val openGalleryEvent: SharedFlow<Unit> = _openGalleryEvent
 
     init {
