@@ -73,9 +73,16 @@ fun RetouchingScreen(
             modifier = Modifier.fillMaxWidth().height(50.dp)
         ) {
             Spacer(modifier = Modifier.weight(1f))
+            IconButton(onClick = {/*TODO*/}) {
+                Icon(
+                    painter = painterResource(R.drawable.download_icon),
+                    contentDescription = "Download Icon",
+                    tint = Color.Black
+                )
+            }
             IconButton(onClick = { onGalleryOpenRequest() }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.add_icon),
+                    painter = painterResource(R.drawable.add_icon),
                     contentDescription = "Select Image",
                     tint = Color.Black
                 )
