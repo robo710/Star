@@ -34,7 +34,7 @@ import com.sonchan.photoretouching.presentation.viewmodel.GalleryViewModel
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
 
 @Composable
-fun MainRoute(
+fun RetouchingRoute(
     modifier: Modifier = Modifier,
     viewModel: GalleryViewModel = hiltViewModel()
 ) {
@@ -52,7 +52,7 @@ fun MainRoute(
         }
     }
 
-    MainScreen(
+    RetouchingScreen(
         modifier = modifier,
         onGalleryOpenRequest = { viewModel.requestOpenGallery() },
         imageUri = imageUri
@@ -60,7 +60,7 @@ fun MainRoute(
 }
 
 @Composable
-fun MainScreen(
+fun RetouchingScreen(
     modifier: Modifier = Modifier,
     onGalleryOpenRequest: () -> Unit,
     imageUri: Uri?
@@ -107,7 +107,7 @@ fun MainScreen(
 @Composable
 fun MainScreenPreview() {
     PhotoRetouchingTheme {
-        MainScreen(
+        RetouchingScreen(
             onGalleryOpenRequest = {},
             imageUri = null,
         )
