@@ -1,7 +1,9 @@
 package com.sonchan.photoretouching.data.repository.main
 
+import android.content.ContentValues
 import android.graphics.Bitmap
 import android.net.Uri
+import android.provider.MediaStore
 import com.sonchan.photoretouching.data.datasource.main.GalleryDataSource
 import com.sonchan.photoretouching.domain.model.ImageFormat
 import com.sonchan.photoretouching.domain.repository.main.GalleryRepository
@@ -20,12 +22,6 @@ class GalleryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun saveImage(bitmap: Bitmap, format: ImageFormat): Boolean {
-        return try {
-            val filename = "IMG"
-            true
-        } catch (e: Exception){
-            e.printStackTrace()
-            false
-        }
+        return galleryDataSource.saveImage(bitmap, format)
     }
 }
