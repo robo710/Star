@@ -1,6 +1,7 @@
 package com.sonchan.photoretouching.presentation.screen
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -17,6 +18,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,11 +33,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.sonchan.photoretouching.R
+import com.sonchan.photoretouching.domain.model.ImageFormat
 import com.sonchan.photoretouching.presentation.component.DevicePreviews
 import com.sonchan.photoretouching.presentation.viewmodel.RetouchingViewModel
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
@@ -47,6 +52,11 @@ fun RetouchingRoute(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val imageUri by viewModel.imageUri.collectAsState()
+    val saveResult by viewModel.saveResult.collectAsState(initial = null)
+    val selectedFormat by viewModel.selectedFormat.collectAsState()
+    val isFormatMenuExpanded by viewModel.isFormatMenuExpanded.collectAsState()
+
+    val context = LocalContext.current
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -54,7 +64,7 @@ fun RetouchingRoute(
         uri?.let {
             coroutineScope.launch {
                 viewModel.updateGalleryImage(it) }
-            }
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -63,11 +73,24 @@ fun RetouchingRoute(
         }
     }
 
+    LaunchedEffect(saveResult) {
+        saveResult?.let { result ->
+            val message = if (result) "이미지 저장 성공!" else "저장 실패 😥"
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            viewModel.clearSaveResult()
+        }
+    }
+
     RetouchingScreen(
         modifier = modifier,
         onGalleryOpenRequest = { viewModel.requestOpenGallery() },
-        onSaveImageRequest = { },
-        imageUri = imageUri
+        onSaveImageRequest = { viewModel.saveImage() },
+        imageUri = imageUri,
+        selectedFormat = selectedFormat,
+        onSelectFormat = { viewModel.updateSelectedFormat(it) },
+        isFormatMenuExpanded = isFormatMenuExpanded,
+        onExpandFormatMenu = { viewModel.onExpandFormatMenu() },
+        onDismissFormatMenu = { viewModel.onDismissFormatMenu() }
     )
 }
 
@@ -75,8 +98,13 @@ fun RetouchingRoute(
 fun RetouchingScreen(
     modifier: Modifier = Modifier,
     onGalleryOpenRequest: () -> Unit,
-    onSaveImageRequest: () -> Unit,
+    onSaveImageRequest: (ImageFormat) -> Unit,
     imageUri: Uri?,
+    selectedFormat: ImageFormat,
+    onSelectFormat: (ImageFormat) -> Unit,
+    isFormatMenuExpanded: Boolean,
+    onExpandFormatMenu: () -> Unit,
+    onDismissFormatMenu: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -91,7 +119,29 @@ fun RetouchingScreen(
                 .height(50.dp)
         ) {
             Spacer(modifier = modifier.weight(1f))
-            IconButton(onClick = { onSaveImageRequest() }) {
+            Box {
+                Text(
+                    text = selectedFormat.name,
+                    modifier = Modifier
+                        .clickable { onExpandFormatMenu() }
+                        .padding(8.dp)
+                )
+                DropdownMenu(
+                    expanded = isFormatMenuExpanded,
+                    onDismissRequest = { onDismissFormatMenu() }
+                ) {
+                    ImageFormat.entries.forEach { format ->
+                        DropdownMenuItem(
+                            text = { Text(format.name) },
+                            onClick = {
+                                onSelectFormat(format)
+                                onDismissFormatMenu()
+                            }
+                        )
+                    }
+                }
+            }
+            IconButton(onClick = { onSaveImageRequest(selectedFormat) }) {
                 Icon(
                     painter = painterResource(R.drawable.download_icon),
                     contentDescription = "Download Icon",
@@ -135,7 +185,12 @@ fun MainScreenPreview() {
         RetouchingScreen(
             onGalleryOpenRequest = {},
             onSaveImageRequest = {},
-            imageUri = null
+            imageUri = null,
+            selectedFormat = ImageFormat.JPG,
+            onSelectFormat = {},
+            isFormatMenuExpanded = false,
+            onExpandFormatMenu = {},
+            onDismissFormatMenu = {}
         )
     }
 }

@@ -37,12 +37,12 @@ class RetouchingDataSourceImpl @Inject constructor(
 
             val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues) ?: return false // 이미지 저장 공간 요청 후 그 위치를 나타내는 URI 받아오는 코드
 
-            contentResolver.openOutputStream(uri)?.use { outStrean ->
+            contentResolver.openOutputStream(uri)?.use { outputStream ->
                 val compressFormat = when (format) {
                     ImageFormat.JPG -> Bitmap.CompressFormat.JPEG
                     ImageFormat.PNG -> Bitmap.CompressFormat.PNG
                 }
-                bitmap.compress(compressFormat, 100, outStrean)
+                bitmap.compress(compressFormat, 100, outputStream)
             }
 
             contentValues.clear()
