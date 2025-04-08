@@ -28,10 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,6 +53,8 @@ fun RetouchingRoute(
     val coroutineScope = rememberCoroutineScope()
     val imageUri by viewModel.imageUri.collectAsState()
     val saveResult by viewModel.saveResult.collectAsState(initial = null)
+    val selectedFormat by viewModel.selectedFormat.collectAsState()
+    val isFormatMenuExpanded by viewModel.isFormatMenuExpanded.collectAsState()
 
     val context = LocalContext.current
 
@@ -65,7 +64,7 @@ fun RetouchingRoute(
         uri?.let {
             coroutineScope.launch {
                 viewModel.updateGalleryImage(it) }
-            }
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -78,14 +77,20 @@ fun RetouchingRoute(
         saveResult?.let { result ->
             val message = if (result) "이미지 저장 성공!" else "저장 실패 😥"
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            viewModel.clearSaveResult()
         }
     }
 
     RetouchingScreen(
         modifier = modifier,
         onGalleryOpenRequest = { viewModel.requestOpenGallery() },
-        onSaveImageRequest = { format -> viewModel.saveImage(format) },
-        imageUri = imageUri
+        onSaveImageRequest = { viewModel.saveImage() },
+        imageUri = imageUri,
+        selectedFormat = selectedFormat,
+        onSelectFormat = { viewModel.updateSelectedFormat(it) },
+        isFormatMenuExpanded = isFormatMenuExpanded,
+        onExpandFormatMenu = { viewModel.onExpandFormatMenu() },
+        onDismissFormatMenu = { viewModel.onDismissFormatMenu() }
     )
 }
 
@@ -95,10 +100,12 @@ fun RetouchingScreen(
     onGalleryOpenRequest: () -> Unit,
     onSaveImageRequest: (ImageFormat) -> Unit,
     imageUri: Uri?,
+    selectedFormat: ImageFormat,
+    onSelectFormat: (ImageFormat) -> Unit,
+    isFormatMenuExpanded: Boolean,
+    onExpandFormatMenu: () -> Unit,
+    onDismissFormatMenu: () -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    var selectedFormat by remember { mutableStateOf(ImageFormat.JPG) }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -132,19 +139,19 @@ fun RetouchingScreen(
             Text(
                 text = selectedFormat.name,
                 modifier = Modifier
-                    .clickable { expanded = true }
+                    .clickable { onExpandFormatMenu() }
                     .padding(8.dp)
             )
             DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
+                expanded = isFormatMenuExpanded,
+                onDismissRequest = { onDismissFormatMenu() }
             ) {
                 ImageFormat.values().forEach { format ->
                     DropdownMenuItem(
                         text = { Text(format.name) },
                         onClick = {
-                            selectedFormat = format
-                            expanded = false
+                            onSelectFormat(format)
+                            onDismissFormatMenu()
                         }
                     )
                 }
@@ -179,7 +186,12 @@ fun MainScreenPreview() {
         RetouchingScreen(
             onGalleryOpenRequest = {},
             onSaveImageRequest = {},
-            imageUri = null
+            imageUri = null,
+            selectedFormat = ImageFormat.JPG,
+            onSelectFormat = {},
+            isFormatMenuExpanded = false,
+            onExpandFormatMenu = {},
+            onDismissFormatMenu = {}
         )
     }
 }

@@ -32,11 +32,15 @@ class RetouchingViewModel @Inject constructor(
 
     private val _imageUri = MutableStateFlow<Uri?>(null)
     private val _openGalleryEvent = MutableSharedFlow<Unit>() // 이벤트 트리거 용도
-    private val _saveResult = MutableStateFlow<Boolean>(false)
+    private val _saveResult = MutableStateFlow<Boolean?>(null)
+    private val _selectedFormat = MutableStateFlow<ImageFormat>(ImageFormat.JPG)
+    private val _isFormatMenuExpanded = MutableStateFlow<Boolean>(false)
 
     val imageUri: StateFlow<Uri?> = _imageUri
     val openGalleryEvent: SharedFlow<Unit> = _openGalleryEvent
-    val saveResult: SharedFlow<Boolean> = _saveResult
+    val saveResult: SharedFlow<Boolean?> = _saveResult
+    val selectedFormat: StateFlow<ImageFormat> = _selectedFormat
+    val isFormatMenuExpanded: StateFlow<Boolean> = _isFormatMenuExpanded
 
     init {
         observeGalleryImage()
@@ -73,15 +77,31 @@ class RetouchingViewModel @Inject constructor(
         }
     }
 
-    fun saveImage(format: ImageFormat) {
+    fun saveImage() {
         imageUri.value?.let { uri ->
             val bitmap = uriToBitmap(uri)
             bitmap?.let {
                 viewModelScope.launch {
-                    val result = saveImageToGalleryUseCase(it, format)
-                    _saveResult.emit(result)
+                    val result = saveImageToGalleryUseCase(it, selectedFormat.value)
+                    _saveResult.value = result
                 }
             }
         }
+    }
+
+    fun updateSelectedFormat(format: ImageFormat){
+        _selectedFormat.value = format
+    }
+
+    fun onExpandFormatMenu() {
+        _isFormatMenuExpanded.value = true
+    }
+
+    fun onDismissFormatMenu() {
+        _isFormatMenuExpanded.value = false
+    }
+
+    fun clearSaveResult(){
+        _saveResult.value = null
     }
 }
