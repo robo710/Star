@@ -1,5 +1,6 @@
 package com.sonchan.photoretouching.presentation.viewmodel
 
+import android.content.ContentResolver
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -24,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RetouchingViewModel @Inject constructor(
-    private val context: Context,
+    private val contentResolver: ContentResolver,
     private val getGalleryImageUseCase: GetGalleryImageUseCase,
     private val setGalleryImageUseCase: SetGalleryImageUseCase,
     private val saveImageToGalleryUseCase: SaveImageToGalleryUseCase
@@ -53,10 +54,10 @@ class RetouchingViewModel @Inject constructor(
     private fun uriToBitmap(uri: Uri): Bitmap?{
         return try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
-                val source = ImageDecoder.createSource(context.contentResolver, uri)
+                val source = ImageDecoder.createSource(contentResolver, uri)
                 ImageDecoder.decodeBitmap(source)
             } else {
-                MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+                MediaStore.Images.Media.getBitmap(contentResolver, uri)
             }
         } catch (e: Exception){
             null
