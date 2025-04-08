@@ -26,6 +26,7 @@ class RetouchingDataSourceImpl @Inject constructor(
             val mimeType = when(format){
                 ImageFormat.JPG -> "image/jpeg"
                 ImageFormat.PNG -> "image/png"
+                ImageFormat.WEBP -> "image/webp"
             }
 
             val contentValues = ContentValues().apply {
@@ -41,6 +42,7 @@ class RetouchingDataSourceImpl @Inject constructor(
                 val compressFormat = when (format) {
                     ImageFormat.JPG -> Bitmap.CompressFormat.JPEG
                     ImageFormat.PNG -> Bitmap.CompressFormat.PNG
+                    ImageFormat.WEBP -> Bitmap.CompressFormat.WEBP
                 }
                 bitmap.compress(compressFormat, 100, outputStream)
             }
