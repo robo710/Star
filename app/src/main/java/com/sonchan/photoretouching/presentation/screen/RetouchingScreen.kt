@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,18 +37,23 @@ import coil.compose.rememberAsyncImagePainter
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.presentation.viewmodel.GalleryViewModel
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun RetouchingRoute(
     modifier: Modifier = Modifier,
     viewModel: GalleryViewModel = hiltViewModel()
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val imageUri by viewModel.imageUri.collectAsState()
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let { viewModel.updateGalleryImage(it) }
+        uri?.let {
+            coroutineScope.launch {
+                viewModel.updateGalleryImage(it) }
+            }
     }
 
     LaunchedEffect(Unit) {
@@ -59,7 +65,7 @@ fun RetouchingRoute(
     RetouchingScreen(
         modifier = modifier,
         onGalleryOpenRequest = { viewModel.requestOpenGallery() },
-        onSaveImageRequest = { viewModel. },
+        onSaveImageRequest = { },
         imageUri = imageUri
     )
 }
@@ -69,7 +75,7 @@ fun RetouchingScreen(
     modifier: Modifier = Modifier,
     onGalleryOpenRequest: () -> Unit,
     onSaveImageRequest: () -> Unit,
-    imageUri: Uri?
+    imageUri: Uri?,
 ) {
     Column(
         modifier = modifier
@@ -127,7 +133,8 @@ fun MainScreenPreview() {
     PhotoRetouchingTheme {
         RetouchingScreen(
             onGalleryOpenRequest = {},
-            imageUri = null,
+            onSaveImageRequest = {},
+            imageUri = null
         )
     }
 }
