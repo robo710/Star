@@ -1,4 +1,4 @@
-package com.sonchan.photoretouching.presentation.screen
+package com.sonchan.photoretouching.presentation.component
 
 import androidx.compose.ui.tooling.preview.Preview
 

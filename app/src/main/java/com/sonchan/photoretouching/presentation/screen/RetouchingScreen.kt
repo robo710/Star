@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.sonchan.photoretouching.R
+import com.sonchan.photoretouching.presentation.component.DevicePreviews
 import com.sonchan.photoretouching.presentation.viewmodel.GalleryViewModel
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
 import kotlinx.coroutines.launch
