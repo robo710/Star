@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GalleryViewModel @Inject constructor(
+class RetouchingViewModel @Inject constructor(
     private val context: Context,
     private val getGalleryImageUseCase: GetGalleryImageUseCase,
     private val setGalleryImageUseCase: SetGalleryImageUseCase,

@@ -5,7 +5,7 @@ import android.net.Uri
 import com.sonchan.photoretouching.domain.model.ImageFormat
 import kotlinx.coroutines.flow.Flow
 
-interface GalleryDataSource {
+interface RetouchingDataSource {
     val imageUri: Flow<Uri?>
     suspend fun setImageUri(uri: Uri?)
     suspend fun saveImage(bitmap: Bitmap, format: ImageFormat): Boolean

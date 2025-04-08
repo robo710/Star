@@ -1,9 +1,9 @@
 package com.sonchan.photoretouching.di
 
-import com.sonchan.photoretouching.data.datasource.main.GalleryDataSource
-import com.sonchan.photoretouching.data.datasource.main.GalleryDataSourceImpl
-import com.sonchan.photoretouching.data.repository.main.GalleryRepositoryImpl
-import com.sonchan.photoretouching.domain.repository.main.GalleryRepository
+import com.sonchan.photoretouching.data.datasource.main.RetouchingDataSource
+import com.sonchan.photoretouching.data.datasource.main.RetouchingDataSourceImpl
+import com.sonchan.photoretouching.data.repository.main.RetouchingRepositoryImpl
+import com.sonchan.photoretouching.domain.repository.main.RetouchingRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -16,13 +16,13 @@ abstract class AppModule {
 
     @Binds
     @Singleton
-    abstract fun bindGalleryDataSource(
-        impl: GalleryDataSourceImpl
-    ): GalleryDataSource
+    abstract fun bindRetouchingDataSource(
+        impl: RetouchingDataSourceImpl
+    ): RetouchingDataSource
 
     @Binds
     @Singleton
-    abstract fun bindGalleryRepository(
-        impl: GalleryRepositoryImpl
-    ): GalleryRepository
+    abstract fun bindRetouchingRepository(
+        impl: RetouchingRepositoryImpl
+    ): RetouchingRepository
 }

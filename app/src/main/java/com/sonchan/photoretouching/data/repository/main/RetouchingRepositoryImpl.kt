@@ -1,18 +1,16 @@
 package com.sonchan.photoretouching.data.repository.main
 
-import android.content.ContentValues
 import android.graphics.Bitmap
 import android.net.Uri
-import android.provider.MediaStore
-import com.sonchan.photoretouching.data.datasource.main.GalleryDataSource
+import com.sonchan.photoretouching.data.datasource.main.RetouchingDataSource
 import com.sonchan.photoretouching.domain.model.ImageFormat
-import com.sonchan.photoretouching.domain.repository.main.GalleryRepository
+import com.sonchan.photoretouching.domain.repository.main.RetouchingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GalleryRepositoryImpl @Inject constructor(
-    private val galleryDataSource: GalleryDataSource
-): GalleryRepository {
+class RetouchingRepositoryImpl @Inject constructor(
+    private val galleryDataSource: RetouchingDataSource
+): RetouchingRepository {
     override fun getGalleryImage(): Flow<Uri?> {
         return galleryDataSource.imageUri
     }

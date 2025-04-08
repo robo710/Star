@@ -36,14 +36,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.presentation.component.DevicePreviews
-import com.sonchan.photoretouching.presentation.viewmodel.GalleryViewModel
+import com.sonchan.photoretouching.presentation.viewmodel.RetouchingViewModel
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
 import kotlinx.coroutines.launch
 
 @Composable
 fun RetouchingRoute(
     modifier: Modifier = Modifier,
-    viewModel: GalleryViewModel = hiltViewModel()
+    viewModel: RetouchingViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     val imageUri by viewModel.imageUri.collectAsState()

@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
-class GalleryDataSourceImpl @Inject constructor(
+class RetouchingDataSourceImpl @Inject constructor(
     private val contentResolver: ContentResolver
-): GalleryDataSource{
+): RetouchingDataSource{
     private val _imageUri = MutableStateFlow<Uri?>(null)
     override val imageUri: Flow<Uri?> = _imageUri
 

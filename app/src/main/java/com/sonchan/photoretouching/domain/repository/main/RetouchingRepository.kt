@@ -5,7 +5,7 @@ import android.net.Uri
 import com.sonchan.photoretouching.domain.model.ImageFormat
 import kotlinx.coroutines.flow.Flow
 
-interface GalleryRepository {
+interface RetouchingRepository {
     fun getGalleryImage(): Flow<Uri?>
     suspend fun setGalleryImage(uri: Uri?)
     suspend fun saveImage(bitmap: Bitmap, format: ImageFormat): Boolean
