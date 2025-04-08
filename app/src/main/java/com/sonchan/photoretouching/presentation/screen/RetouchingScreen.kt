@@ -119,6 +119,28 @@ fun RetouchingScreen(
                 .height(50.dp)
         ) {
             Spacer(modifier = modifier.weight(1f))
+            Box {
+                Text(
+                    text = selectedFormat.name,
+                    modifier = Modifier
+                        .clickable { onExpandFormatMenu() }
+                        .padding(8.dp)
+                )
+                DropdownMenu(
+                    expanded = isFormatMenuExpanded,
+                    onDismissRequest = { onDismissFormatMenu() }
+                ) {
+                    ImageFormat.entries.forEach { format ->
+                        DropdownMenuItem(
+                            text = { Text(format.name) },
+                            onClick = {
+                                onSelectFormat(format)
+                                onDismissFormatMenu()
+                            }
+                        )
+                    }
+                }
+            }
             IconButton(onClick = { onSaveImageRequest(selectedFormat) }) {
                 Icon(
                     painter = painterResource(R.drawable.download_icon),
@@ -132,29 +154,6 @@ fun RetouchingScreen(
                     contentDescription = "Select Image",
                     tint = Color.Black
                 )
-            }
-        }
-
-        Box {
-            Text(
-                text = selectedFormat.name,
-                modifier = Modifier
-                    .clickable { onExpandFormatMenu() }
-                    .padding(8.dp)
-            )
-            DropdownMenu(
-                expanded = isFormatMenuExpanded,
-                onDismissRequest = { onDismissFormatMenu() }
-            ) {
-                ImageFormat.values().forEach { format ->
-                    DropdownMenuItem(
-                        text = { Text(format.name) },
-                        onClick = {
-                            onSelectFormat(format)
-                            onDismissFormatMenu()
-                        }
-                    )
-                }
             }
         }
 
