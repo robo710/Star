@@ -7,7 +7,7 @@ import javax.inject.Inject
 class SetGalleryImageUseCase @Inject constructor(
     private val repository: GalleryRepository
 ) {
-    operator fun invoke(uri: Uri?){
+    suspend operator fun invoke(uri: Uri?){
         repository.setGalleryImage(uri)
     }
 }
