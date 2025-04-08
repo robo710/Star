@@ -59,6 +59,7 @@ fun RetouchingRoute(
     RetouchingScreen(
         modifier = modifier,
         onGalleryOpenRequest = { viewModel.requestOpenGallery() },
+        onSaveImageRequest = { viewModel. },
         imageUri = imageUri
     )
 }
@@ -67,6 +68,7 @@ fun RetouchingRoute(
 fun RetouchingScreen(
     modifier: Modifier = Modifier,
     onGalleryOpenRequest: () -> Unit,
+    onSaveImageRequest: () -> Unit,
     imageUri: Uri?
 ) {
     Column(
@@ -82,7 +84,7 @@ fun RetouchingScreen(
                 .height(50.dp)
         ) {
             Spacer(modifier = modifier.weight(1f))
-            IconButton(onClick = {/*TODO*/}) {
+            IconButton(onClick = { onSaveImageRequest() }) {
                 Icon(
                     painter = painterResource(R.drawable.download_icon),
                     contentDescription = "Download Icon",
