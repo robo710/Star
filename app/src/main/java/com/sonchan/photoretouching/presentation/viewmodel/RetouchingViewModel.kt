@@ -1,7 +1,6 @@
 package com.sonchan.photoretouching.presentation.viewmodel
 
 import android.content.ContentResolver
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
