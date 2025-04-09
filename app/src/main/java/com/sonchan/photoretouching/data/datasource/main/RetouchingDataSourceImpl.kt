@@ -26,10 +26,9 @@ class RetouchingDataSourceImpl @Inject constructor(
     override suspend fun saveImage(bitmap: Bitmap, format: ImageFormat): Boolean {
         return try {
             val now = System.currentTimeMillis()
-            val formattedDate = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date(now))
-            val millisSuffix = (now % 1000).toString().padStart(3, '0') // 밀리초 3자리 보장
+            val formattedDate = SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).format(Date(now))
 
-            val filename = "PR_${formattedDate}_$millisSuffix.${format.name.lowercase()}"
+            val filename = "PR_${formattedDate}.${format.name.lowercase()}"
             val mimeType = when(format){
                 ImageFormat.JPG -> "image/jpeg"
                 ImageFormat.PNG -> "image/png"
