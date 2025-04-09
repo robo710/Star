@@ -61,7 +61,6 @@ object RetouchingToastUtil {
     }
 }
 
-@Suppress("DEPRECATION")
 class RetouchingToast(private val context: Context) {
     fun showToast(
         message: String,

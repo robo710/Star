@@ -8,6 +8,9 @@ import android.provider.MediaStore
 import com.sonchan.photoretouching.domain.model.ImageFormat
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 class RetouchingDataSourceImpl @Inject constructor(
@@ -22,7 +25,10 @@ class RetouchingDataSourceImpl @Inject constructor(
 
     override suspend fun saveImage(bitmap: Bitmap, format: ImageFormat): Boolean {
         return try {
-            val filename = "IMG_${System.currentTimeMillis()}.${format.name.lowercase()}"
+            val now = System.currentTimeMillis()
+            val formattedDate = SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).format(Date(now))
+
+            val filename = "PR_${formattedDate}.${format.name.lowercase()}"
             val mimeType = when(format){
                 ImageFormat.JPG -> "image/jpeg"
                 ImageFormat.PNG -> "image/png"
