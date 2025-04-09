@@ -3,6 +3,7 @@ package com.sonchan.photoretouching.presentation.component
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -40,6 +41,11 @@ object RetouchingToastUtil {
                     color = Color(0xFFFFFFFF),
                     shape = RoundedCornerShape(size = 12.dp)
                 )
+                .border(
+                    width = 1.dp,
+                    color = Color(0xFF000000),
+                    shape = RoundedCornerShape(size = 12.dp)
+                )
                 .padding(horizontal = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -67,7 +73,7 @@ class RetouchingToast(private val context: Context) {
             setViewTreeViewModelStoreOwner(viewModelStoreOwner)
             setViewTreeSavedStateRegistryOwner(savedStateRegistryOwner)
             setContent {
-                RetouchingToastUtil.SetToast(
+                SetToast(
                     message = message,
                     icon = icon
                 )
