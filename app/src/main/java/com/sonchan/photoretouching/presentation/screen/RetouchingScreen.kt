@@ -85,7 +85,7 @@ fun RetouchingRoute(
             val message = if (result) "이미지 저장 성공!" else "저장 실패 😥"
             RetouchingToast(context).showToast(
                 message = message,
-                icon = if (result) R.drawable.download_icon else R.drawable.add_icon,
+                icon = if (result) R.drawable.success_icon else R.drawable.fail_icon,
                 duration = Toast.LENGTH_SHORT,
                 lifecycleOwner = lifecycleOwner,
                 viewModelStoreOwner = viewModelStoreOwner!!,

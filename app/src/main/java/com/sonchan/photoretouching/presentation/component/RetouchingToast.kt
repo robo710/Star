@@ -106,6 +106,6 @@ class RetouchingToast(private val context: Context) {
 fun RetouchingToastPreview() {
     SetToast(
         message = "성공",
-        icon = R.drawable.add_icon
+        icon = R.drawable.success_icon
     )
 }
