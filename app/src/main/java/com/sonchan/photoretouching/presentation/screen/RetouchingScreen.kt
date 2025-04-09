@@ -34,13 +34,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import coil.compose.rememberAsyncImagePainter
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.domain.model.ImageFormat
 import com.sonchan.photoretouching.presentation.component.DevicePreviews
+import com.sonchan.photoretouching.presentation.component.RetouchingToast
 import com.sonchan.photoretouching.presentation.viewmodel.RetouchingViewModel
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
 import kotlinx.coroutines.launch
@@ -57,6 +61,9 @@ fun RetouchingRoute(
     val isFormatMenuExpanded by viewModel.isFormatMenuExpanded.collectAsState()
 
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val viewModelStoreOwner = LocalViewModelStoreOwner.current
+    val savedStateRegistryOwner = LocalSavedStateRegistryOwner.current
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -76,7 +83,14 @@ fun RetouchingRoute(
     LaunchedEffect(saveResult) {
         saveResult?.let { result ->
             val message = if (result) "이미지 저장 성공!" else "저장 실패 😥"
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            RetouchingToast(context).showToast(
+                message = message,
+                icon = if (result) R.drawable.success_icon else R.drawable.fail_icon,
+                duration = Toast.LENGTH_SHORT,
+                lifecycleOwner = lifecycleOwner,
+                viewModelStoreOwner = viewModelStoreOwner!!,
+                savedStateRegistryOwner = savedStateRegistryOwner
+            )
             viewModel.clearSaveResult()
         }
     }
