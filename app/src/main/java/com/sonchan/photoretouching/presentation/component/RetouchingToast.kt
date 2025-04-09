@@ -1,10 +1,11 @@
 package com.sonchan.photoretouching.presentation.component
 
 import android.content.Context
+import android.view.Gravity
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
@@ -34,29 +36,32 @@ object RetouchingToastUtil {
         message: String,
         icon: Int,
     ) {
-        Row(
+        Box(
             modifier = modifier
                 .fillMaxWidth()
                 .background(
-                    color = Color(0xFFFFFFFF),
-                    shape = RoundedCornerShape(size = 12.dp)
+                    color = Color.White,
+                    shape = RoundedCornerShape(12.dp)
                 )
-                .border(
-                    width = 1.dp,
-                    color = Color(0xFF000000),
-                    shape = RoundedCornerShape(size = 12.dp)
-                )
-                .padding(horizontal = 20.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .border(1.dp, Color.Black, RoundedCornerShape(12.dp))
+                .padding(horizontal = 20.dp, vertical = 12.dp)
         ) {
+            Text(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Center),
+                text = message,
+                textAlign = TextAlign.Center
+            )
             Icon(
                 painter = painterResource(id = icon),
                 contentDescription = "ToastIcon",
-                tint = Color.Unspecified
+                tint = Color.Unspecified,
+                modifier = Modifier.align(Alignment.CenterStart)
             )
-            Text(text = message)
         }
     }
+
 }
 
 class RetouchingToast(private val context: Context) {
@@ -68,6 +73,11 @@ class RetouchingToast(private val context: Context) {
         viewModelStoreOwner: ViewModelStoreOwner,
         savedStateRegistryOwner: SavedStateRegistryOwner
     ) {
+        fun dpToPx(dp: Int): Int {
+            val density = context.resources.displayMetrics.density
+            return (dp * density).toInt()
+        }
+
         val composeView = ComposeView(context).apply {
             setViewTreeLifecycleOwner(lifecycleOwner)
             setViewTreeViewModelStoreOwner(viewModelStoreOwner)
@@ -83,6 +93,11 @@ class RetouchingToast(private val context: Context) {
         Toast(context).apply {
             this.duration = duration
             this.view = composeView
+            setGravity(
+                Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL,
+                0, // xOffset
+                dpToPx(50 )// yOffset
+            )
             show()
         }
     }
