@@ -5,8 +5,8 @@ import android.view.Gravity
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -36,32 +36,29 @@ object RetouchingToastUtil {
         message: String,
         icon: Int,
     ) {
-        Box(
+        Row(
             modifier = modifier
-                .fillMaxWidth()
                 .background(
-                    color = Color.White,
+                    color = Color(0xFFFFFFFF),
                     shape = RoundedCornerShape(12.dp)
                 )
-                .border(1.dp, Color.Black, RoundedCornerShape(12.dp))
-                .padding(horizontal = 20.dp, vertical = 12.dp)
+                .border(1.dp, Color(0xFF868686), RoundedCornerShape(12.dp))
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .align(Alignment.Center),
-                text = message,
-                textAlign = TextAlign.Center
-            )
             Icon(
                 painter = painterResource(id = icon),
                 contentDescription = "ToastIcon",
                 tint = Color.Unspecified,
-                modifier = Modifier.align(Alignment.CenterStart)
+            )
+            Spacer(modifier = modifier.padding(5.dp))
+            Text(
+                modifier = modifier,
+                text = message,
+                textAlign = TextAlign.Center
             )
         }
     }
-
 }
 
 class RetouchingToast(private val context: Context) {
@@ -107,7 +104,7 @@ class RetouchingToast(private val context: Context) {
 @Composable
 fun RetouchingToastPreview() {
     SetToast(
-        message = "안녕",
+        message = "성공",
         icon = R.drawable.add_icon
     )
 }
