@@ -13,6 +13,7 @@ import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 
+@Suppress("DEPRECATION")
 class RetouchingDataSourceImpl @Inject constructor(
     private val contentResolver: ContentResolver
 ): RetouchingDataSource{
