@@ -216,7 +216,8 @@ fun RetouchingScreen(
                 value = brightnessValue,
                 valueRange = -100..100,
                 listState = brightnessSliderState,
-                onValueChanged = onBrightnessChanged
+                onValueChanged = onBrightnessChanged,
+                tickInterval = 10
             )
         }
         RetouchingOptions(

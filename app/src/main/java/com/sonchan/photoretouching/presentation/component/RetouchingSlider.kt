@@ -37,15 +37,16 @@ fun RetouchingSlider(
     value: Int,
     valueRange: IntRange,
     listState: LazyListState,
-    onValueChanged: (Int) -> Unit
+    onValueChanged: (Int) -> Unit,
+    tickInterval: Int
 ) {
-    val tickInterval = 10 // 틱 간격 설정
     val tickList = IntProgression.fromClosedRange(valueRange.first, valueRange.last, tickInterval).toList()
 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // 중앙에 수치 표시
         Row(
@@ -76,7 +77,6 @@ fun RetouchingSlider(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp)
-                .align(Alignment.CenterHorizontally)
         ) {
             LazyRow(
                 state = listState,
@@ -104,7 +104,7 @@ fun RetouchingSlider(
             onValueChange = { onValueChanged(it.toInt()) },
             valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(0.8f)
                 .padding(top = 16.dp),
             colors = SliderDefaults.colors(
                 thumbColor = MaterialTheme.colorScheme.primary,
@@ -127,7 +127,8 @@ fun RetouchingSlidePreview() {
             value = currentValue,
             valueRange = -100..100,
             listState = previewState,
-            onValueChanged = { newValue -> currentValue = newValue }
+            onValueChanged = { newValue -> currentValue = newValue },
+            tickInterval = 10
         )
     }
 }
