@@ -49,6 +49,7 @@ import com.sonchan.photoretouching.presentation.component.DevicePreviews
 import com.sonchan.photoretouching.presentation.component.ImageFormatDropDown
 import com.sonchan.photoretouching.presentation.component.RetouchingOptions
 import com.sonchan.photoretouching.presentation.component.RetouchingToast
+import com.sonchan.photoretouching.presentation.component.ThemeToggleButton
 import com.sonchan.photoretouching.presentation.viewmodel.RetouchingViewModel
 import com.sonchan.photoretouching.presentation.viewmodel.ThemeViewModel
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
@@ -66,6 +67,7 @@ fun RetouchingRoute(
     val selectedFormat by viewModel.selectedFormat.collectAsState()
     val isFormatMenuExpanded by viewModel.isFormatMenuExpanded.collectAsState()
     val selectedRetouchingOption by viewModel.selectedRetouchingOption.collectAsState()
+    val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -113,7 +115,9 @@ fun RetouchingRoute(
         onExpandFormatMenu = { viewModel.onExpandFormatMenu() },
         onDismissFormatMenu = { viewModel.onDismissFormatMenu() },
         selectedOption = selectedRetouchingOption,
-        selectRetouchingOption = { viewModel.selectRetouchingOption(it) }
+        selectRetouchingOption = { viewModel.selectRetouchingOption(it) },
+        isDarkTheme = isDarkTheme,
+        onToggleTheme = { themeViewModel.toggleTheme() }
     )
 }
 
@@ -130,6 +134,8 @@ fun RetouchingScreen(
     onDismissFormatMenu: () -> Unit,
     selectedOption: RetouchingOption?,
     selectRetouchingOption: (RetouchingOption) -> Unit,
+    isDarkTheme: Boolean,
+    onToggleTheme: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -144,6 +150,10 @@ fun RetouchingScreen(
                 .height(50.dp)
         ) {
             Spacer(modifier = modifier.weight(1f))
+            ThemeToggleButton(
+                isDarkTheme = isDarkTheme,
+                onToggleTheme = onToggleTheme
+            )
             ImageFormatDropDown(
                 selectedFormat = selectedFormat,
                 isFormatMenuExpanded = isFormatMenuExpanded,
@@ -213,7 +223,9 @@ fun MainScreenPreview() {
             onExpandFormatMenu = {},
             onDismissFormatMenu = {},
             selectedOption = RetouchingOption.BRIGHTNESS,
-            selectRetouchingOption = {}
+            selectRetouchingOption = {},
+            isDarkTheme = false,
+            onToggleTheme = {}
         )
     }
 }
@@ -232,7 +244,9 @@ fun MainScreenDarkThemePreview() {
             onExpandFormatMenu = {},
             onDismissFormatMenu = {},
             selectedOption = RetouchingOption.BRIGHTNESS,
-            selectRetouchingOption = {}
+            selectRetouchingOption = {},
+            isDarkTheme = true,
+            onToggleTheme = {}
         )
     }
 }
