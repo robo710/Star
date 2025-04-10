@@ -1,29 +1,28 @@
 package com.sonchan.photoretouching.presentation.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sonchan.photoretouching.domain.model.RetouchingOption
@@ -36,47 +35,44 @@ fun RetouchingOptions(
     selectedOption: RetouchingOption?,
     onOptionSelected: (RetouchingOption) -> Unit
 ) {
-    val density = LocalDensity.current
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-
-    var contentWidth by remember { mutableStateOf(0.dp) }
-
-    // 측정된 콘텐츠 너비를 기준으로 가운데 정렬할지 결정
-    val shouldCenter = contentWidth < screenWidth
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
+    LazyRow(
+        modifier = modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = if (shouldCenter) Arrangement.Center else Arrangement.spacedBy(12.dp),
-            modifier = modifier
-                .fillMaxWidth()
-                .onGloballyPositioned { layoutCoordinates ->
-                    with(density) {
-                        contentWidth = layoutCoordinates.size.width.toDp()
-                    }
-                }
-        ) {
-            items(options) { option ->
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier
-                        .clickable { onOptionSelected(option) }
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(option.icon),
-                        contentDescription = option.label,
-                        tint = Color.Black
+        items(options) { option ->
+            val isSelected = selectedOption == option
+
+            val scale by animateFloatAsState(if (isSelected) 1.2f else 1f)
+            val tintColor by animateColorAsState(if (isSelected) Color.Black else Color.Gray)
+            val interactionSource = remember { MutableInteractionSource() }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .graphicsLayer(
+                        scaleX = scale,
+                        scaleY = scale
                     )
-                    if (selectedOption == option) {
-                        Text(
-                            text = option.label,
-                            textAlign = TextAlign.Center
-                        )
+                    .clickable(
+                        indication = null,
+                        interactionSource = interactionSource
+                    ) {
+                        onOptionSelected(option)
                     }
+            ) {
+                Icon(
+                    painter = painterResource(option.icon),
+                    contentDescription = option.label,
+                    tint = tintColor,
+                    modifier = Modifier.size(32.dp)
+                )
+                AnimatedVisibility(visible = isSelected) {
+                    Text(
+                        text = option.label,
+                        color = Color.Black,
+                        style = MaterialTheme.typography.labelSmall
+                    )
                 }
             }
         }
