@@ -1,6 +1,7 @@
 package com.sonchan.photoretouching.presentation.component
 
 import android.content.res.Configuration
+import android.text.Layout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,6 +33,7 @@ import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
 
 @Composable
 fun RetouchingSlider(
+    modifier: Modifier = Modifier,
     value: Int,
     valueRange: IntRange,
     listState: LazyListState,
@@ -40,13 +43,13 @@ fun RetouchingSlider(
     val tickList = IntProgression.fromClosedRange(valueRange.first, valueRange.last, tickInterval).toList()
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
         // 중앙에 수치 표시
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(bottom = 8.dp),
             horizontalArrangement = Arrangement.Center
@@ -62,28 +65,36 @@ fun RetouchingSlider(
 
         // 기준선
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .height(2.dp)
                 .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
         )
 
         // 틱 마커 표시
-        LazyRow(
-            state = listState,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+                .align(Alignment.CenterHorizontally)
         ) {
-            items(tickList) { tickValue ->
-                Box(
-                    modifier = Modifier
-                        .width(2.dp)
-                        .height(12.dp)
-                        .background(
-                            if (tickValue == value) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                        )
-                )
+            LazyRow(
+                state = listState,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = modifier
+                    .align(Alignment.Center)
+            ) {
+                items(tickList) { tickValue ->
+                    Box(
+                        modifier = modifier
+                            .width(2.dp)
+                            .height(12.dp)
+                            .background(
+                                if (tickValue == value) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            )
+                    )
+                }
             }
         }
 
@@ -104,6 +115,7 @@ fun RetouchingSlider(
     }
 }
 
+
 @Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
@@ -112,10 +124,10 @@ fun RetouchingSlidePreview() {
         var currentValue by remember { mutableStateOf(0) }
         val previewState = rememberLazyListState()
         RetouchingSlider(
-            value = currentValue,  // 동적으로 바뀌는 value 값
+            value = currentValue,
             valueRange = -100..100,
             listState = previewState,
-            onValueChanged = { newValue -> currentValue = newValue } // 수치 값 변경 시 반영
+            onValueChanged = { newValue -> currentValue = newValue }
         )
     }
 }
