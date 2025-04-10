@@ -200,7 +200,7 @@ fun RetouchingScreen(
             )
         }
         RetouchingOptions(
-            options = RetouchingOption.values().toList(),
+            options = RetouchingOption.entries,
             onOptionSelected = selectRetouchingOption,
             selectedOption = selectedOption
         )
