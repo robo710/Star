@@ -43,6 +43,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.domain.model.ImageFormat
 import com.sonchan.photoretouching.domain.model.RetouchingOption
+import com.sonchan.photoretouching.presentation.component.DarkThemeDevicePreview
 import com.sonchan.photoretouching.presentation.component.DevicePreviews
 import com.sonchan.photoretouching.presentation.component.ImageFormatDropDown
 import com.sonchan.photoretouching.presentation.component.RetouchingOptions
@@ -195,6 +196,25 @@ fun RetouchingScreen(
 @DevicePreviews
 @Composable
 fun MainScreenPreview() {
+    PhotoRetouchingTheme {
+        RetouchingScreen(
+            onGalleryOpenRequest = {},
+            onSaveImageRequest = {},
+            imageUri = null,
+            selectedFormat = ImageFormat.JPG,
+            onSelectFormat = {},
+            isFormatMenuExpanded = false,
+            onExpandFormatMenu = {},
+            onDismissFormatMenu = {},
+            selectedOption = RetouchingOption.BRIGHTNESS,
+            selectRetouchingOption = {}
+        )
+    }
+}
+
+@DarkThemeDevicePreview
+@Composable
+fun MainScreenDarkThemePreview() {
     PhotoRetouchingTheme {
         RetouchingScreen(
             onGalleryOpenRequest = {},
