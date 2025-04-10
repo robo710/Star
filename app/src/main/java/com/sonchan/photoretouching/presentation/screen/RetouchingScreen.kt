@@ -1,6 +1,7 @@
 package com.sonchan.photoretouching.presentation.screen
 
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -48,6 +49,7 @@ import com.sonchan.photoretouching.presentation.component.DarkThemeDevicePreview
 import com.sonchan.photoretouching.presentation.component.DevicePreviews
 import com.sonchan.photoretouching.presentation.component.ImageFormatDropDown
 import com.sonchan.photoretouching.presentation.component.RetouchingOptions
+import com.sonchan.photoretouching.presentation.component.RetouchingSlider
 import com.sonchan.photoretouching.presentation.component.RetouchingToast
 import com.sonchan.photoretouching.presentation.component.ThemeToggleButton
 import com.sonchan.photoretouching.presentation.viewmodel.RetouchingViewModel
@@ -210,7 +212,7 @@ fun RetouchingScreen(
             )
         }
         if (selectedOption == RetouchingOption.BRIGHTNESS) {
-            com.sonchan.photoretouching.presentation.component.RetouchingSlider(
+            RetouchingSlider(
                 value = brightnessValue,
                 valueRange = -100..100,
                 listState = brightnessSliderState,

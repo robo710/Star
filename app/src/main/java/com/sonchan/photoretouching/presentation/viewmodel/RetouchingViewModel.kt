@@ -6,6 +6,7 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -119,6 +120,7 @@ class RetouchingViewModel @Inject constructor(
     }
 
     fun updateBrightnessValue(value: Int){
+        Log.d("로그", "Updated Brightness: $value")
         _brightnessValue.value = value
     }
 }
