@@ -37,10 +37,21 @@ fun ThemeToggleButton(
 
 @Preview(showBackground = true)
 @Composable
-fun ThemeToggleButtonPreview(){
+fun ThemeToggleLightThemeButtonPreview(){
     PhotoRetouchingTheme {
         ThemeToggleButton(
             isDarkTheme = false,
+            onToggleTheme = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ThemeToggleDarkThemeButtonPreview(){
+    PhotoRetouchingTheme {
+        ThemeToggleButton(
+            isDarkTheme = true,
             onToggleTheme = {}
         )
     }
