@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sonchan.photoretouching.domain.model.ImageFormat
+import com.sonchan.photoretouching.domain.model.RetouchingOption
 import com.sonchan.photoretouching.domain.usecase.main.GetGalleryImageUseCase
 import com.sonchan.photoretouching.domain.usecase.main.SaveImageToGalleryUseCase
 import com.sonchan.photoretouching.domain.usecase.main.SetGalleryImageUseCase
@@ -35,12 +36,14 @@ class RetouchingViewModel @Inject constructor(
     private val _saveResult = MutableStateFlow<Boolean?>(null)
     private val _selectedFormat = MutableStateFlow<ImageFormat>(ImageFormat.JPG)
     private val _isFormatMenuExpanded = MutableStateFlow<Boolean>(false)
+    private val _selectedRetouchingOption = MutableStateFlow<RetouchingOption?>(null)
 
     val imageUri: StateFlow<Uri?> = _imageUri
     val openGalleryEvent: SharedFlow<Unit> = _openGalleryEvent
     val saveResult: SharedFlow<Boolean?> = _saveResult
     val selectedFormat: StateFlow<ImageFormat> = _selectedFormat
     val isFormatMenuExpanded: StateFlow<Boolean> = _isFormatMenuExpanded
+    val selectedRetouchingOption: StateFlow<RetouchingOption?> = _selectedRetouchingOption
 
     init {
         observeGalleryImage()
@@ -103,5 +106,9 @@ class RetouchingViewModel @Inject constructor(
 
     fun clearSaveResult(){
         _saveResult.value = null
+    }
+
+    fun selectRetouchingOption(option: RetouchingOption){
+        _selectedRetouchingOption.value = option
     }
 }

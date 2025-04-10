@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,8 +42,10 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import coil.compose.rememberAsyncImagePainter
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.domain.model.ImageFormat
+import com.sonchan.photoretouching.domain.model.RetouchingOption
 import com.sonchan.photoretouching.presentation.component.DevicePreviews
 import com.sonchan.photoretouching.presentation.component.ImageFormatDropDown
+import com.sonchan.photoretouching.presentation.component.RetouchingOptions
 import com.sonchan.photoretouching.presentation.component.RetouchingToast
 import com.sonchan.photoretouching.presentation.viewmodel.RetouchingViewModel
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
@@ -58,6 +61,7 @@ fun RetouchingRoute(
     val saveResult by viewModel.saveResult.collectAsState(initial = null)
     val selectedFormat by viewModel.selectedFormat.collectAsState()
     val isFormatMenuExpanded by viewModel.isFormatMenuExpanded.collectAsState()
+    val selectedRetouchingOption by viewModel.selectedRetouchingOption.collectAsState()
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -103,7 +107,9 @@ fun RetouchingRoute(
         onSelectFormat = { viewModel.updateSelectedFormat(it) },
         isFormatMenuExpanded = isFormatMenuExpanded,
         onExpandFormatMenu = { viewModel.onExpandFormatMenu() },
-        onDismissFormatMenu = { viewModel.onDismissFormatMenu() }
+        onDismissFormatMenu = { viewModel.onDismissFormatMenu() },
+        selectedOption = selectedRetouchingOption,
+        selectRetouchingOption = { viewModel.selectRetouchingOption(it) }
     )
 }
 
@@ -117,13 +123,15 @@ fun RetouchingScreen(
     onSelectFormat: (ImageFormat) -> Unit,
     isFormatMenuExpanded: Boolean,
     onExpandFormatMenu: () -> Unit,
-    onDismissFormatMenu: () -> Unit
+    onDismissFormatMenu: () -> Unit,
+    selectedOption: RetouchingOption?,
+    selectRetouchingOption: (RetouchingOption) -> Unit,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(WindowInsets.statusBars.asPaddingValues())
+            .padding(WindowInsets.systemBars.asPaddingValues())
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -161,17 +169,25 @@ fun RetouchingScreen(
             Image(
                 painter = rememberAsyncImagePainter(it),
                 contentDescription = "Selected Image",
-                modifier = modifier.fillMaxSize(),
+                modifier = modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
                 contentScale = ContentScale.Fit
             )
         } ?: Box(
             modifier
-                .fillMaxSize()
+                .weight(1f)
+                .fillMaxWidth()
                 .clickable { onGalleryOpenRequest() },
             contentAlignment = Alignment.Center
         ) {
             Text("이미지를 선택하세요")
         }
+        RetouchingOptions(
+            options = RetouchingOption.values().toList(),
+            onOptionSelected = selectRetouchingOption,
+            selectedOption = selectedOption
+        )
     }
 }
 
@@ -188,7 +204,9 @@ fun MainScreenPreview() {
             onSelectFormat = {},
             isFormatMenuExpanded = false,
             onExpandFormatMenu = {},
-            onDismissFormatMenu = {}
+            onDismissFormatMenu = {},
+            selectedOption = RetouchingOption.BRIGHTNESS,
+            selectRetouchingOption = {}
         )
     }
 }
