@@ -49,7 +49,7 @@ fun RetouchingOptions(
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
+                modifier = modifier
                     .graphicsLayer(
                         scaleX = scale,
                         scaleY = scale
@@ -65,7 +65,7 @@ fun RetouchingOptions(
                     painter = painterResource(option.icon),
                     contentDescription = option.label,
                     tint = tintColor,
-                    modifier = Modifier.size(32.dp)
+                    modifier = modifier.size(32.dp)
                 )
                 AnimatedVisibility(visible = isSelected) {
                     Text(
