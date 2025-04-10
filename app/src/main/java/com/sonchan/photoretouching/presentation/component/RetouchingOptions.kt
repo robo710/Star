@@ -1,6 +1,5 @@
 package com.sonchan.photoretouching.presentation.component
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
