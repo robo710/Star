@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,10 +24,11 @@ fun ImageFormatDropDown(
 ){
     Box {
         Text(
-            text = selectedFormat.name,
             modifier = Modifier
                 .clickable { onExpandFormatMenu() }
-                .padding(8.dp)
+                .padding(8.dp),
+            text = selectedFormat.name,
+            color = MaterialTheme.colorScheme.onSurface
         )
         DropdownMenu(
             expanded = isFormatMenuExpanded,
@@ -34,7 +36,12 @@ fun ImageFormatDropDown(
         ) {
             ImageFormat.entries.forEach { format ->
                 DropdownMenuItem(
-                    text = { Text(format.name) },
+                    text = {
+                        Text(
+                            text = format.name,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
                     onClick = {
                         onSelectFormat(format)
                         onDismissFormatMenu()

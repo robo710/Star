@@ -17,11 +17,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,7 +30,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
@@ -43,18 +42,22 @@ import coil.compose.rememberAsyncImagePainter
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.domain.model.ImageFormat
 import com.sonchan.photoretouching.domain.model.RetouchingOption
+import com.sonchan.photoretouching.presentation.component.DarkThemeDevicePreview
 import com.sonchan.photoretouching.presentation.component.DevicePreviews
 import com.sonchan.photoretouching.presentation.component.ImageFormatDropDown
 import com.sonchan.photoretouching.presentation.component.RetouchingOptions
 import com.sonchan.photoretouching.presentation.component.RetouchingToast
+import com.sonchan.photoretouching.presentation.component.ThemeToggleButton
 import com.sonchan.photoretouching.presentation.viewmodel.RetouchingViewModel
+import com.sonchan.photoretouching.presentation.viewmodel.ThemeViewModel
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
 import kotlinx.coroutines.launch
 
 @Composable
 fun RetouchingRoute(
     modifier: Modifier = Modifier,
-    viewModel: RetouchingViewModel = hiltViewModel()
+    viewModel: RetouchingViewModel = hiltViewModel(),
+    themeViewModel: ThemeViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     val imageUri by viewModel.imageUri.collectAsState()
@@ -62,6 +65,7 @@ fun RetouchingRoute(
     val selectedFormat by viewModel.selectedFormat.collectAsState()
     val isFormatMenuExpanded by viewModel.isFormatMenuExpanded.collectAsState()
     val selectedRetouchingOption by viewModel.selectedRetouchingOption.collectAsState()
+    val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -90,6 +94,7 @@ fun RetouchingRoute(
                 message = message,
                 icon = if (result) R.drawable.success_icon else R.drawable.fail_icon,
                 duration = Toast.LENGTH_SHORT,
+                isDarkTheme = isDarkTheme,
                 lifecycleOwner = lifecycleOwner,
                 viewModelStoreOwner = viewModelStoreOwner!!,
                 savedStateRegistryOwner = savedStateRegistryOwner
@@ -109,7 +114,9 @@ fun RetouchingRoute(
         onExpandFormatMenu = { viewModel.onExpandFormatMenu() },
         onDismissFormatMenu = { viewModel.onDismissFormatMenu() },
         selectedOption = selectedRetouchingOption,
-        selectRetouchingOption = { viewModel.selectRetouchingOption(it) }
+        selectRetouchingOption = { viewModel.selectRetouchingOption(it) },
+        isDarkTheme = isDarkTheme,
+        onToggleTheme = { themeViewModel.toggleTheme() }
     )
 }
 
@@ -126,11 +133,13 @@ fun RetouchingScreen(
     onDismissFormatMenu: () -> Unit,
     selectedOption: RetouchingOption?,
     selectRetouchingOption: (RetouchingOption) -> Unit,
+    isDarkTheme: Boolean,
+    onToggleTheme: () -> Unit,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .padding(WindowInsets.systemBars.asPaddingValues())
     ) {
         Row(
@@ -140,6 +149,10 @@ fun RetouchingScreen(
                 .height(50.dp)
         ) {
             Spacer(modifier = modifier.weight(1f))
+            ThemeToggleButton(
+                isDarkTheme = isDarkTheme,
+                onToggleTheme = onToggleTheme
+            )
             ImageFormatDropDown(
                 selectedFormat = selectedFormat,
                 isFormatMenuExpanded = isFormatMenuExpanded,
@@ -151,19 +164,19 @@ fun RetouchingScreen(
                 Icon(
                     painter = painterResource(R.drawable.download_icon),
                     contentDescription = "Download Icon",
-                    tint = Color.Black
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
             IconButton(onClick = { onGalleryOpenRequest() }) {
                 Icon(
                     painter = painterResource(R.drawable.add_icon),
                     contentDescription = "Select Image",
-                    tint = Color.Black
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
         }
 
-        HorizontalDivider(thickness = 1.dp, color = Color.Gray)
+        HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
 
         imageUri?.let {
             Image(
@@ -181,10 +194,13 @@ fun RetouchingScreen(
                 .clickable { onGalleryOpenRequest() },
             contentAlignment = Alignment.Center
         ) {
-            Text("이미지를 선택하세요")
+            Text(
+                text = "이미지를 선택하세요",
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
         RetouchingOptions(
-            options = RetouchingOption.values().toList(),
+            options = RetouchingOption.entries,
             onOptionSelected = selectRetouchingOption,
             selectedOption = selectedOption
         )
@@ -206,7 +222,30 @@ fun MainScreenPreview() {
             onExpandFormatMenu = {},
             onDismissFormatMenu = {},
             selectedOption = RetouchingOption.BRIGHTNESS,
-            selectRetouchingOption = {}
+            selectRetouchingOption = {},
+            isDarkTheme = false,
+            onToggleTheme = {}
+        )
+    }
+}
+
+@DarkThemeDevicePreview
+@Composable
+fun MainScreenDarkThemePreview() {
+    PhotoRetouchingTheme {
+        RetouchingScreen(
+            onGalleryOpenRequest = {},
+            onSaveImageRequest = {},
+            imageUri = null,
+            selectedFormat = ImageFormat.JPG,
+            onSelectFormat = {},
+            isFormatMenuExpanded = false,
+            onExpandFormatMenu = {},
+            onDismissFormatMenu = {},
+            selectedOption = RetouchingOption.BRIGHTNESS,
+            selectRetouchingOption = {},
+            isDarkTheme = true,
+            onToggleTheme = {}
         )
     }
 }

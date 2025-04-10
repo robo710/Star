@@ -1,6 +1,7 @@
 [versions]
 agp = "8.9.0"
 coilCompose = "2.4.0"
+datastorePreferences = "1.1.4"
 hiltNavigationCompose = "1.2.0"
 kotlin = "1.9.0"
 coreKtx = "1.15.0"
@@ -13,6 +14,7 @@ composeBom = "2025.03.00"
 hilt = "2.48"
 
 [libraries]
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }

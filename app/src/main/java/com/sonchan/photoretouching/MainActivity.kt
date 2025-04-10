@@ -5,9 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.sonchan.photoretouching.presentation.screen.RetouchingRoute
+import com.sonchan.photoretouching.presentation.viewmodel.ThemeViewModel
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,7 +29,10 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            PhotoRetouchingTheme {
+            val themeViewModel: ThemeViewModel = hiltViewModel()
+            val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
+
+            PhotoRetouchingTheme(darkTheme = isDarkTheme) {
                 RetouchingRoute()
             }
         }
