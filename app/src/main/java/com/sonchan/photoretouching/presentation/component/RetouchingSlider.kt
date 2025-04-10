@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,7 +27,8 @@ fun RetouchingSlider(
     modifier: Modifier = Modifier,
     value: Int,
     valueRange: IntRange,
-    onValueChange: (Int) -> Unit
+    listState: LazyListState,
+    onValueChanged: (Int) -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -39,14 +42,12 @@ fun RetouchingSlider(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Custom slider bar
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp),
             contentAlignment = Alignment.Center
         ) {
-            // 중앙 기준선
             Box(
                 modifier = Modifier
                     .width(2.dp)
@@ -54,7 +55,6 @@ fun RetouchingSlider(
                     .background(MaterialTheme.colorScheme.primary)
             )
 
-            // 틱 마크 리스트
             LazyRow(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -83,12 +83,14 @@ fun RetouchingSlider(
 @Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-fun RetouchingSlidePreview(){
+fun RetouchingSlidePreview() {
     PhotoRetouchingTheme {
+        val previewState = rememberLazyListState()
         RetouchingSlider(
             value = 0,
             valueRange = -100..100,
-            onValueChange = {},
+            listState = previewState,
+            onValueChanged = {}
         )
     }
 }
