@@ -96,6 +96,7 @@ fun RetouchingRoute(
                 message = message,
                 icon = if (result) R.drawable.success_icon else R.drawable.fail_icon,
                 duration = Toast.LENGTH_SHORT,
+                isDarkTheme = isDarkTheme,
                 lifecycleOwner = lifecycleOwner,
                 viewModelStoreOwner = viewModelStoreOwner!!,
                 savedStateRegistryOwner = savedStateRegistryOwner
