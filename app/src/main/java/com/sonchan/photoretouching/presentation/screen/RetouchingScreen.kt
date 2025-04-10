@@ -50,13 +50,15 @@ import com.sonchan.photoretouching.presentation.component.ImageFormatDropDown
 import com.sonchan.photoretouching.presentation.component.RetouchingOptions
 import com.sonchan.photoretouching.presentation.component.RetouchingToast
 import com.sonchan.photoretouching.presentation.viewmodel.RetouchingViewModel
+import com.sonchan.photoretouching.presentation.viewmodel.ThemeViewModel
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
 import kotlinx.coroutines.launch
 
 @Composable
 fun RetouchingRoute(
     modifier: Modifier = Modifier,
-    viewModel: RetouchingViewModel = hiltViewModel()
+    viewModel: RetouchingViewModel = hiltViewModel(),
+    themeViewModel: ThemeViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     val imageUri by viewModel.imageUri.collectAsState()
