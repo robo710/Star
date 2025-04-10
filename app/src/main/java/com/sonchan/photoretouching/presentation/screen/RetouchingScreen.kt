@@ -44,6 +44,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.domain.model.ImageFormat
 import com.sonchan.photoretouching.presentation.component.DevicePreviews
+import com.sonchan.photoretouching.presentation.component.ImageFormatDropDown
 import com.sonchan.photoretouching.presentation.component.RetouchingToast
 import com.sonchan.photoretouching.presentation.viewmodel.RetouchingViewModel
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
@@ -133,28 +134,13 @@ fun RetouchingScreen(
                 .height(50.dp)
         ) {
             Spacer(modifier = modifier.weight(1f))
-            Box {
-                Text(
-                    text = selectedFormat.name,
-                    modifier = Modifier
-                        .clickable { onExpandFormatMenu() }
-                        .padding(8.dp)
-                )
-                DropdownMenu(
-                    expanded = isFormatMenuExpanded,
-                    onDismissRequest = { onDismissFormatMenu() }
-                ) {
-                    ImageFormat.entries.forEach { format ->
-                        DropdownMenuItem(
-                            text = { Text(format.name) },
-                            onClick = {
-                                onSelectFormat(format)
-                                onDismissFormatMenu()
-                            }
-                        )
-                    }
-                }
-            }
+            ImageFormatDropDown(
+                selectedFormat = selectedFormat,
+                isFormatMenuExpanded = isFormatMenuExpanded,
+                onExpandFormatMenu = onExpandFormatMenu,
+                onDismissFormatMenu = onDismissFormatMenu,
+                onSelectFormat = onSelectFormat
+            )
             IconButton(onClick = { onSaveImageRequest(selectedFormat) }) {
                 Icon(
                     painter = painterResource(R.drawable.download_icon),
