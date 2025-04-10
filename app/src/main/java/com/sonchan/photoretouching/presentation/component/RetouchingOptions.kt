@@ -43,7 +43,7 @@ fun RetouchingOptions(
             val isSelected = selectedOption == option
 
             val scale by animateFloatAsState(if (isSelected) 1.2f else 1f)
-            val tintColor by animateColorAsState(if (isSelected) Color.Black else Color.Gray)
+            val tintColor by animateColorAsState(if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant)
             val interactionSource = remember { MutableInteractionSource() }
 
             Column(
@@ -70,7 +70,7 @@ fun RetouchingOptions(
                 if (isSelected) {
                     Text(
                         text = option.label,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.labelSmall
                     )
                 } else{

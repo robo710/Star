@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -131,7 +132,7 @@ fun RetouchingScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .padding(WindowInsets.systemBars.asPaddingValues())
     ) {
         Row(
@@ -152,19 +153,19 @@ fun RetouchingScreen(
                 Icon(
                     painter = painterResource(R.drawable.download_icon),
                     contentDescription = "Download Icon",
-                    tint = Color.Black
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
             IconButton(onClick = { onGalleryOpenRequest() }) {
                 Icon(
                     painter = painterResource(R.drawable.add_icon),
                     contentDescription = "Select Image",
-                    tint = Color.Black
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
         }
 
-        HorizontalDivider(thickness = 1.dp, color = Color.Gray)
+        HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
 
         imageUri?.let {
             Image(
@@ -182,7 +183,10 @@ fun RetouchingScreen(
                 .clickable { onGalleryOpenRequest() },
             contentAlignment = Alignment.Center
         ) {
-            Text("이미지를 선택하세요")
+            Text(
+                text = "이미지를 선택하세요",
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
         RetouchingOptions(
             options = RetouchingOption.values().toList(),
