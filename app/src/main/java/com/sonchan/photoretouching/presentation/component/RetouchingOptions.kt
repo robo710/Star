@@ -50,10 +50,6 @@ fun RetouchingOptions(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = modifier
-                    .graphicsLayer(
-                        scaleX = scale,
-                        scaleY = scale
-                    )
                     .clickable(
                         indication = null,
                         interactionSource = interactionSource
@@ -65,14 +61,21 @@ fun RetouchingOptions(
                     painter = painterResource(option.icon),
                     contentDescription = option.label,
                     tint = tintColor,
-                    modifier = modifier.size(32.dp)
+                    modifier = modifier
+                        .size(32.dp)
+                        .graphicsLayer(
+                            scaleX = scale,
+                            scaleY = scale
+                        )
                 )
-                AnimatedVisibility(visible = isSelected) {
+                if (isSelected) {
                     Text(
                         text = option.label,
                         color = Color.Black,
                         style = MaterialTheme.typography.labelSmall
                     )
+                } else{
+                    Text( text = "" )
                 }
             }
         }
