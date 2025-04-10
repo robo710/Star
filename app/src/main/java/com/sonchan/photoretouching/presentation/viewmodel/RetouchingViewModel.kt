@@ -6,6 +6,7 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sonchan.photoretouching.domain.model.ImageFormat
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.sql.Statement
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +39,8 @@ class RetouchingViewModel @Inject constructor(
     private val _selectedFormat = MutableStateFlow<ImageFormat>(ImageFormat.JPG)
     private val _isFormatMenuExpanded = MutableStateFlow<Boolean>(false)
     private val _selectedRetouchingOption = MutableStateFlow<RetouchingOption?>(null)
+    private val _brightnessSliderState = LazyListState()
+    private val _brightnessValue = MutableStateFlow<Int>(0)
 
     val imageUri: StateFlow<Uri?> = _imageUri
     val openGalleryEvent: SharedFlow<Unit> = _openGalleryEvent
@@ -44,6 +48,8 @@ class RetouchingViewModel @Inject constructor(
     val selectedFormat: StateFlow<ImageFormat> = _selectedFormat
     val isFormatMenuExpanded: StateFlow<Boolean> = _isFormatMenuExpanded
     val selectedRetouchingOption: StateFlow<RetouchingOption?> = _selectedRetouchingOption
+    val brightnessSliderState: LazyListState get() = _brightnessSliderState
+    val brightnessValue: StateFlow<Int> = _brightnessValue
 
     init {
         observeGalleryImage()
@@ -110,5 +116,9 @@ class RetouchingViewModel @Inject constructor(
 
     fun selectRetouchingOption(option: RetouchingOption){
         _selectedRetouchingOption.value = option
+    }
+
+    fun updateBrightnessValue(value: Int){
+        _brightnessValue.value = value
     }
 }
