@@ -141,7 +141,7 @@ fun RetouchingScreen(
             )
             IconButton(onClick = { onSaveImageRequest(selectedFormat) }) {
                 Icon(
-                    painter = painterResource(R.drawable.download_icon),
+                    painter = painterResource(R.icon.download_icon),
                     contentDescription = "Download Icon",
                     tint = Color.Black
                 )
