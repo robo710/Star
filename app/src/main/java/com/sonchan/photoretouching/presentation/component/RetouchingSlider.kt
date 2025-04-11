@@ -85,7 +85,7 @@ fun RetouchingSlider(
                     itemsIndexed(tickList) { index, tickValue ->
                         val isEmphasized = tickValue % tickInterval == 0
                         val tickBarWidth = if (isEmphasized) 3.dp else 2.dp
-                        val tickBarHeight = if (isEmphasized) 16.dp else 10.dp
+                        val tickBarHeight = if (isEmphasized) 20.dp else 10.dp
 
                         Box(
                             modifier = Modifier
