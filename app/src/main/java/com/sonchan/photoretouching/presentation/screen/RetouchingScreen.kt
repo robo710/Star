@@ -219,11 +219,17 @@ fun RetouchingScreen(
                 tickInterval = 10
             )
         }
-        RetouchingOptions(
-            options = RetouchingOption.entries,
-            onOptionSelected = selectRetouchingOption,
-            selectedOption = selectedOption
-        )
+        Box(
+            modifier = modifier
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            RetouchingOptions(
+                options = RetouchingOption.entries,
+                onOptionSelected = selectRetouchingOption,
+                selectedOption = selectedOption
+            )
+        }
     }
 }
 

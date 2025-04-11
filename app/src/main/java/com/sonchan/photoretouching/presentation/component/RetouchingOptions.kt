@@ -34,7 +34,6 @@ fun RetouchingOptions(
     onOptionSelected: (RetouchingOption) -> Unit
 ) {
     LazyRow(
-        modifier = modifier.fillMaxWidth(),
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(24.dp)
     ) {
