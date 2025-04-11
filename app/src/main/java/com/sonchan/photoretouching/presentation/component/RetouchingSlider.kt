@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -56,7 +57,7 @@ fun RetouchingSlider(
                 .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
         )
 
-        // 틱 마커 표시
+        // 틱 마커와 텍스트 및 리셋 버튼을 포함하는 Row
         Row(
             modifier = modifier
                 .fillMaxWidth()
@@ -64,27 +65,27 @@ fun RetouchingSlider(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = modifier.weight(1f))
-
-            // 왼쪽 수치 표시
-            Text(
-                text = "$value",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.Bold
-                ),
+            // 왼쪽 수치 표시 (고정된 크기로 설정)
+            Box(
                 modifier = modifier
-                    .padding(end = 8.dp)
-            )
-
-            Spacer(modifier = modifier.weight(1f))
+                    .wrapContentWidth()
+                    .padding(end = 25.dp) // 틱 마커와의 간격 조정
+            ) {
+                Text(
+                    text = "$value",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+            }
 
             // 틱 마커들
             LazyRow(
                 state = listState,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = modifier
-                    .align(Alignment.CenterVertically) // 수직 정렬
+                    .align(Alignment.CenterVertically)
             ) {
                 items(tickList) { tickValue ->
                     Box(
@@ -99,8 +100,7 @@ fun RetouchingSlider(
                 }
             }
 
-            Spacer(modifier = modifier.weight(1f))
-
+            // 오른쪽 리셋 버튼
             IconButton(onClick = { onResetValue() }) {
                 Icon(
                     painter = painterResource(R.drawable.reset_icon),
@@ -108,7 +108,6 @@ fun RetouchingSlider(
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
-            Spacer(modifier = modifier.weight(1f))
         }
 
         // 슬라이더
@@ -127,6 +126,7 @@ fun RetouchingSlider(
         )
     }
 }
+
 
 
 @Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
