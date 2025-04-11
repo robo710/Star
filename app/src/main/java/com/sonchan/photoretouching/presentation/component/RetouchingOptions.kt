@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -31,11 +32,11 @@ fun RetouchingOptions(
     modifier: Modifier = Modifier,
     options: List<RetouchingOption>,
     selectedOption: RetouchingOption?,
-    onOptionSelected: (RetouchingOption) -> Unit
+    onOptionSelected: (RetouchingOption) -> Unit,
+    optionValues: Map<RetouchingOption, Int>
 ) {
     LazyRow(
-        modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
+        contentPadding = PaddingValues(horizontal = 24.dp),
         horizontalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         items(options) { option ->
@@ -55,17 +56,7 @@ fun RetouchingOptions(
                         onOptionSelected(option)
                     }
             ) {
-                Icon(
-                    painter = painterResource(option.icon),
-                    contentDescription = option.label,
-                    tint = tintColor,
-                    modifier = modifier
-                        .size(32.dp)
-                        .graphicsLayer(
-                            scaleX = scale,
-                            scaleY = scale
-                        )
-                )
+                val optionValue = optionValues[option] ?: 0 // 옵션에 해당하는 값
                 if (isSelected) {
                     Text(
                         text = option.label,
@@ -75,6 +66,24 @@ fun RetouchingOptions(
                 } else{
                     Text( text = "" )
                 }
+                Icon(
+                    painter = painterResource(option.icon),
+                    contentDescription = option.label,
+                    tint = tintColor,
+                    modifier = modifier
+                        .padding(top = 4.dp)
+                        .size(32.dp)
+                        .graphicsLayer(
+                            scaleX = scale,
+                            scaleY = scale
+                        )
+                )
+                Text(
+                    text = "$optionValue",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = modifier.padding(top = 4.dp) // 아이콘과 수치 사이 간격
+                )
             }
         }
     }
@@ -88,7 +97,10 @@ fun RetouchingOptionsPreview(){
         RetouchingOptions(
             options = RetouchingOption.values().toList(),
             selectedOption = RetouchingOption.BRIGHTNESS,
-            onOptionSelected = {}
+            onOptionSelected = {},
+            optionValues = mapOf(RetouchingOption.BRIGHTNESS to 50,
+            RetouchingOption.CONTRAST to 30,
+            RetouchingOption.SATURATION to 70),
         )
     }
 }

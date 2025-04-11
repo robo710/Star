@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,6 +48,7 @@ import com.sonchan.photoretouching.presentation.component.DarkThemeDevicePreview
 import com.sonchan.photoretouching.presentation.component.DevicePreviews
 import com.sonchan.photoretouching.presentation.component.ImageFormatDropDown
 import com.sonchan.photoretouching.presentation.component.RetouchingOptions
+import com.sonchan.photoretouching.presentation.component.RetouchingSlider
 import com.sonchan.photoretouching.presentation.component.RetouchingToast
 import com.sonchan.photoretouching.presentation.component.ThemeToggleButton
 import com.sonchan.photoretouching.presentation.viewmodel.RetouchingViewModel
@@ -66,6 +69,8 @@ fun RetouchingRoute(
     val isFormatMenuExpanded by viewModel.isFormatMenuExpanded.collectAsState()
     val selectedRetouchingOption by viewModel.selectedRetouchingOption.collectAsState()
     val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
+    val brightnessValue by viewModel.brightnessValue.collectAsState()
+    val brightnessSliderState = viewModel.brightnessSliderState
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -116,7 +121,11 @@ fun RetouchingRoute(
         selectedOption = selectedRetouchingOption,
         selectRetouchingOption = { viewModel.selectRetouchingOption(it) },
         isDarkTheme = isDarkTheme,
-        onToggleTheme = { themeViewModel.toggleTheme() }
+        onToggleTheme = { themeViewModel.toggleTheme() },
+        brightnessValue = brightnessValue,
+        brightnessSliderState = brightnessSliderState,
+        onBrightnessChanged = { viewModel.updateBrightnessValue(it) },
+        onBrightnessReset = { viewModel.onBrightValueReset() }
     )
 }
 
@@ -135,6 +144,10 @@ fun RetouchingScreen(
     selectRetouchingOption: (RetouchingOption) -> Unit,
     isDarkTheme: Boolean,
     onToggleTheme: () -> Unit,
+    brightnessValue: Int,
+    brightnessSliderState: LazyListState,
+    onBrightnessChanged: (Int) -> Unit,
+    onBrightnessReset: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -199,11 +212,28 @@ fun RetouchingScreen(
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
-        RetouchingOptions(
-            options = RetouchingOption.entries,
-            onOptionSelected = selectRetouchingOption,
-            selectedOption = selectedOption
-        )
+        if (selectedOption == RetouchingOption.BRIGHTNESS) {
+            RetouchingSlider(
+                value = brightnessValue,
+                valueRange = -100..100,
+                listState = brightnessSliderState,
+                onValueChanged = onBrightnessChanged,
+                tickInterval = 10,
+                onResetValue = onBrightnessReset
+            )
+        }
+        Box(
+            modifier = modifier
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            RetouchingOptions(
+                options = RetouchingOption.entries,
+                onOptionSelected = selectRetouchingOption,
+                selectedOption = selectedOption,
+                optionValues = mapOf(RetouchingOption.BRIGHTNESS to brightnessValue)
+            )
+        }
     }
 }
 
@@ -224,7 +254,11 @@ fun MainScreenPreview() {
             selectedOption = RetouchingOption.BRIGHTNESS,
             selectRetouchingOption = {},
             isDarkTheme = false,
-            onToggleTheme = {}
+            onToggleTheme = {},
+            brightnessValue = 0,
+            brightnessSliderState = rememberLazyListState(),
+            onBrightnessChanged = {},
+            onBrightnessReset = {}
         )
     }
 }
@@ -245,7 +279,11 @@ fun MainScreenDarkThemePreview() {
             selectedOption = RetouchingOption.BRIGHTNESS,
             selectRetouchingOption = {},
             isDarkTheme = true,
-            onToggleTheme = {}
+            onToggleTheme = {},
+            brightnessValue = 0,
+            brightnessSliderState = rememberLazyListState(),
+            onBrightnessChanged = {},
+            onBrightnessReset = {},
         )
     }
 }
