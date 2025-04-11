@@ -105,7 +105,7 @@ fun RetouchingSlider(
 
             Spacer(modifier = modifier.weight(1f))
 
-            IconButton(onClick = { onResetValue }) {
+            IconButton(onClick = { onResetValue() }) {
                 Icon(
                     painter = painterResource(R.drawable.reset_icon),
                     contentDescription = "reset_Setting",

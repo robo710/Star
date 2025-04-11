@@ -125,6 +125,7 @@ fun RetouchingRoute(
         brightnessValue = brightnessValue,
         brightnessSliderState = brightnessSliderState,
         onBrightnessChanged = { viewModel.updateBrightnessValue(it) },
+        onBrightnessReset = { viewModel.onBrightValueReset() }
     )
 }
 
@@ -145,7 +146,8 @@ fun RetouchingScreen(
     onToggleTheme: () -> Unit,
     brightnessValue: Int,
     brightnessSliderState: LazyListState,
-    onBrightnessChanged: (Int) -> Unit
+    onBrightnessChanged: (Int) -> Unit,
+    onBrightnessReset: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -216,7 +218,8 @@ fun RetouchingScreen(
                 valueRange = -100..100,
                 listState = brightnessSliderState,
                 onValueChanged = onBrightnessChanged,
-                tickInterval = 10
+                tickInterval = 10,
+                onResetValue = onBrightnessReset
             )
         }
         Box(
@@ -254,7 +257,8 @@ fun MainScreenPreview() {
             onToggleTheme = {},
             brightnessValue = 0,
             brightnessSliderState = rememberLazyListState(),
-            onBrightnessChanged = {}
+            onBrightnessChanged = {},
+            onBrightnessReset = {}
         )
     }
 }
@@ -278,7 +282,8 @@ fun MainScreenDarkThemePreview() {
             onToggleTheme = {},
             brightnessValue = 0,
             brightnessSliderState = rememberLazyListState(),
-            onBrightnessChanged = {}
+            onBrightnessChanged = {},
+            onBrightnessReset = {},
         )
     }
 }

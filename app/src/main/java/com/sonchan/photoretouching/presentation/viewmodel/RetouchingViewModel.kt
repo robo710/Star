@@ -123,4 +123,8 @@ class RetouchingViewModel @Inject constructor(
         Log.d("로그", "Updated Brightness: $value")
         _brightnessValue.value = value
     }
+
+    fun onBrightValueReset(){
+        _brightnessValue.value = 0
+    }
 }
