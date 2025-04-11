@@ -2,6 +2,7 @@ package com.sonchan.photoretouching.presentation.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,10 +43,10 @@ fun RetouchingSlider(
     onResetValue: () -> Unit,
 ) {
     val tickList = IntProgression.fromClosedRange(valueRange.first, valueRange.last, tickInterval).toList()
+    val centerValue = (valueRange.first + valueRange.last) / 2
 
     Column(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // 기준선
@@ -56,51 +57,55 @@ fun RetouchingSlider(
                 .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
         )
 
-        // 틱 마커와 텍스트 및 리셋 버튼을 포함하는 Row
         Row(
             modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            horizontalArrangement = Arrangement.Center,
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 왼쪽 수치 표시 (고정된 크기로 설정)
-            Box(
-                modifier = modifier
-                    .wrapContentWidth()
-                    .padding(end = 25.dp) // 틱 마커와의 간격 조정
-            ) {
-                Text(
-                    text = "$value",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.onBackground,
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-            }
+            Text(
+                text = "$value",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontWeight = FontWeight.Bold
+                ),
+                modifier = Modifier
+                    .weight(1f)
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+            )
 
-            // 틱 마커들
-            LazyRow(
-                state = listState,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = modifier
-                    .align(Alignment.CenterVertically)
+            Box(
+                modifier = Modifier
+                    .weight(3f),
+                contentAlignment = Alignment.Center
             ) {
-                items(tickList) { tickValue ->
-                    Box(
-                        modifier = modifier
-                            .width(2.dp)
-                            .height(12.dp)
-                            .background(
-                                if (tickValue == value) MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                            )
-                    )
+                LazyRow(
+                    state = listState,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    items(tickList) { tickValue ->
+                        val isEmphasized = tickValue == valueRange.first || tickValue == valueRange.last || tickValue == centerValue
+                        val height = if (isEmphasized) 16.dp else 12.dp
+                        val width = if (isEmphasized) 3.dp else 2.dp
+
+                        Box(
+                            modifier = Modifier
+                                .width(width)
+                                .height(height)
+                                .background(
+                                    if (tickValue == value) MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                )
+                                .clickable { onValueChanged(tickValue) }
+                        )
+                    }
                 }
             }
 
-            // 오른쪽 리셋 버튼
-            IconButton(onClick = { onResetValue() }) {
+            IconButton(
+                onClick = { onResetValue() },
+                modifier = Modifier.weight(1f)
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.reset_icon),
                     contentDescription = "Reset Setting",
@@ -109,14 +114,12 @@ fun RetouchingSlider(
             }
         }
 
-        // 슬라이더
         Slider(
             value = value.toFloat(),
             onValueChange = { onValueChanged(it.toInt()) },
             valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
             modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .padding(top = 8.dp),
+                .fillMaxWidth(0.8f),
             colors = SliderDefaults.colors(
                 thumbColor = MaterialTheme.colorScheme.primary,
                 activeTrackColor = MaterialTheme.colorScheme.primary,
@@ -124,6 +127,7 @@ fun RetouchingSlider(
             )
         )
     }
+
 }
 
 
