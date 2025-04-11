@@ -15,6 +15,8 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -26,9 +28,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
 
 @Composable
@@ -38,7 +42,8 @@ fun RetouchingSlider(
     valueRange: IntRange,
     listState: LazyListState,
     onValueChanged: (Int) -> Unit,
-    tickInterval: Int
+    tickInterval: Int,
+    onResetValue: () -> Unit,
 ) {
     val tickList = IntProgression.fromClosedRange(valueRange.first, valueRange.last, tickInterval).toList()
 
@@ -100,16 +105,13 @@ fun RetouchingSlider(
 
             Spacer(modifier = modifier.weight(1f))
 
-            // 오른쪽 수치 표시
-            Text(
-                text = "$value",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.Bold
-                ),
-                modifier = modifier
-                    .padding(start = 8.dp)
-            )
+            IconButton(onClick = { onResetValue }) {
+                Icon(
+                    painter = painterResource(R.drawable.reset_icon),
+                    contentDescription = "reset_Setting",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
             Spacer(modifier = modifier.weight(1f))
         }
 
@@ -136,14 +138,14 @@ fun RetouchingSlider(
 @Composable
 fun RetouchingSlidePreview() {
     PhotoRetouchingTheme {
-        var currentValue by remember { mutableStateOf(0) }
         val previewState = rememberLazyListState()
         RetouchingSlider(
-            value = currentValue,
+            value = 0,
             valueRange = -100..100,
             listState = previewState,
-            onValueChanged = { newValue -> currentValue = newValue },
-            tickInterval = 10
+            onValueChanged = {},
+            tickInterval = 10,
+            onResetValue = {}
         )
     }
 }
