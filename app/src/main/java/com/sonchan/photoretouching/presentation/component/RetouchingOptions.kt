@@ -57,23 +57,6 @@ fun RetouchingOptions(
                     }
             ) {
                 val optionValue = optionValues[option] ?: 0 // 옵션에 해당하는 값
-                Text(
-                    text = "$optionValue", // 수치 표시
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(bottom = 4.dp) // 아이콘과 수치 사이 간격
-                )
-                Icon(
-                    painter = painterResource(option.icon),
-                    contentDescription = option.label,
-                    tint = tintColor,
-                    modifier = modifier
-                        .size(32.dp)
-                        .graphicsLayer(
-                            scaleX = scale,
-                            scaleY = scale
-                        )
-                )
                 if (isSelected) {
                     Text(
                         text = option.label,
@@ -83,6 +66,24 @@ fun RetouchingOptions(
                 } else{
                     Text( text = "" )
                 }
+                Icon(
+                    painter = painterResource(option.icon),
+                    contentDescription = option.label,
+                    tint = tintColor,
+                    modifier = modifier
+                        .padding(top = 4.dp)
+                        .size(32.dp)
+                        .graphicsLayer(
+                            scaleX = scale,
+                            scaleY = scale
+                        )
+                )
+                Text(
+                    text = "$optionValue",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = modifier.padding(top = 4.dp) // 아이콘과 수치 사이 간격
+                )
             }
         }
     }

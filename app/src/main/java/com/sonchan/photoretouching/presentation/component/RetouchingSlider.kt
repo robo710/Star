@@ -54,13 +54,7 @@ fun RetouchingSlider(
                 .padding(bottom = 8.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = "$value",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.Bold
-                )
-            )
+
         }
 
         // 기준선
@@ -76,7 +70,15 @@ fun RetouchingSlider(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp)
+                .align(Alignment.CenterHorizontally),
         ) {
+            Text(
+                text = "$value",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontWeight = FontWeight.Bold
+                )
+            )
             LazyRow(
                 state = listState,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
