@@ -3,34 +3,24 @@ package com.sonchan.photoretouching.presentation.component
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
+import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 @Composable
 fun RetouchingSlider(
@@ -38,12 +28,19 @@ fun RetouchingSlider(
     value: Int,
     valueRange: IntRange,
     listState: LazyListState,
-    onValueChanged: (Int) -> Unit,
     tickInterval: Int,
+    onValueChanged: (Int) -> Unit,
     onResetValue: () -> Unit,
 ) {
-    val tickList = IntProgression.fromClosedRange(valueRange.first, valueRange.last, tickInterval).toList()
-    val centerValue = (valueRange.first + valueRange.last) / 2
+    val tickList = (valueRange.first..valueRange.last).toList()
+    val centerIndex = tickList.indexOf((valueRange.first + valueRange.last) / 2)
+
+    val coroutineScope = rememberCoroutineScope()
+    val spacing = 1.dp
+    val itemWidth = 6.dp
+
+    val spacingPx = with(LocalDensity.current) { spacing.toPx() }
+    val itemWidthPx = with(LocalDensity.current) { itemWidth.toPx() }
 
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -51,15 +48,14 @@ fun RetouchingSlider(
     ) {
         // 기준선
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(2.dp)
                 .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
         )
 
         Row(
-            modifier = modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -73,37 +69,69 @@ fun RetouchingSlider(
                     .wrapContentWidth(Alignment.CenterHorizontally)
             )
 
-            Box(
-                modifier = Modifier
-                    .weight(3f),
+            BoxWithConstraints(
+                modifier = Modifier.weight(3f),
                 contentAlignment = Alignment.Center
             ) {
+                val screenWidth = maxWidth
+
                 LazyRow(
                     state = listState,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    contentPadding = PaddingValues(horizontal = screenWidth / 2 - itemWidth / 2),
+                    horizontalArrangement = Arrangement.spacedBy(spacing),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(tickList) { tickValue ->
-                        val isEmphasized = tickValue == valueRange.first || tickValue == valueRange.last || tickValue == centerValue
-                        val height = if (isEmphasized) 16.dp else 12.dp
-                        val width = if (isEmphasized) 3.dp else 2.dp
+                    itemsIndexed(tickList) { index, tickValue ->
+                        val isEmphasized = tickValue % tickInterval == 0
+                        val tickBarWidth = if (isEmphasized) 3.dp else 2.dp
+                        val tickBarHeight = if (isEmphasized) 16.dp else 10.dp
 
                         Box(
                             modifier = Modifier
-                                .width(width)
-                                .height(height)
-                                .background(
-                                    if (tickValue == value) MaterialTheme.colorScheme.primary
-                                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                                )
-                                .clickable { onValueChanged(tickValue) }
-                        )
+                                .width(itemWidth)
+                                .height(tickBarHeight),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .width(tickBarWidth)
+                                    .height(tickBarHeight)
+                                    .background(
+                                        if (tickValue == value) MaterialTheme.colorScheme.primary
+                                        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                    )
+                                    .then(
+                                        if (isEmphasized) Modifier.clickable {
+                                            coroutineScope.launch {
+                                                listState.animateScrollToItem(index)
+                                                onValueChanged(tickValue)
+                                            }
+                                        } else Modifier
+                                    )
+                            )
+                        }
                     }
                 }
+
+                // 중앙선 가이드
+                Box(
+                    Modifier
+                        .width(2.dp)
+                        .height(24.dp)
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                )
             }
 
             IconButton(
-                onClick = { onResetValue() },
+                onClick = {
+                    coroutineScope.launch {
+                        val centerIdx = tickList.indexOf(0).takeIf { it >= 0 } ?: centerIndex
+                        listState.animateScrollToItem(centerIdx)
+                        onValueChanged(0)
+                    }
+                    onResetValue()
+                },
                 modifier = Modifier.weight(1f)
             ) {
                 Icon(
@@ -113,24 +141,22 @@ fun RetouchingSlider(
                 )
             }
         }
-
-        Slider(
-            value = value.toFloat(),
-            onValueChange = { onValueChanged(it.toInt()) },
-            valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
-            modifier = Modifier
-                .fillMaxWidth(0.8f),
-            colors = SliderDefaults.colors(
-                thumbColor = MaterialTheme.colorScheme.primary,
-                activeTrackColor = MaterialTheme.colorScheme.primary,
-                inactiveTrackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
-            )
-        )
     }
 
+    // 스크롤 따라 값 업데이트
+    LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
+        val itemWithOffset = listState.firstVisibleItemIndex +
+                listState.firstVisibleItemScrollOffset / (itemWidthPx + spacingPx)
+        val roundedIndex = itemWithOffset.roundToInt().coerceIn(0, tickList.lastIndex)
+        onValueChanged(tickList[roundedIndex])
+    }
+
+    // 시작 시 위치 초기화
+    LaunchedEffect(Unit) {
+        val index = tickList.indexOf(value).takeIf { it >= 0 } ?: centerIndex
+        listState.scrollToItem(index)
+    }
 }
-
-
 
 @Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -143,7 +169,7 @@ fun RetouchingSlidePreview() {
             valueRange = -100..100,
             listState = previewState,
             onValueChanged = {},
-            tickInterval = 10,
+            tickInterval = 10, // 강조는 10단위마다
             onResetValue = {}
         )
     }
