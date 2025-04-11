@@ -43,8 +43,7 @@ fun RetouchingSlider(
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // 중앙에 수치 표시

@@ -36,7 +36,7 @@ fun RetouchingOptions(
     optionValues: Map<RetouchingOption, Int>
 ) {
     LazyRow(
-        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
+        contentPadding = PaddingValues(horizontal = 24.dp),
         horizontalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         items(options) { option ->
