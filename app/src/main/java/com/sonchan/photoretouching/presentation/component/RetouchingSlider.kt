@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -46,16 +47,6 @@ fun RetouchingSlider(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 중앙에 수치 표시
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-
-        }
-
         // 기준선
         Box(
             modifier = modifier
@@ -65,24 +56,34 @@ fun RetouchingSlider(
         )
 
         // 틱 마커 표시
-        Box(
+        Row(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp)
-                .align(Alignment.CenterHorizontally),
+                .padding(top = 8.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Spacer(modifier = modifier.weight(1f))
+
+            // 왼쪽 수치 표시
             Text(
                 text = "$value",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Bold
-                )
+                ),
+                modifier = modifier
+                    .padding(end = 8.dp)
             )
+
+            Spacer(modifier = modifier.weight(1f))
+
+            // 틱 마커들
             LazyRow(
                 state = listState,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = modifier
-                    .align(Alignment.Center)
+                    .align(Alignment.CenterVertically) // 수직 정렬
             ) {
                 items(tickList) { tickValue ->
                     Box(
@@ -96,6 +97,20 @@ fun RetouchingSlider(
                     )
                 }
             }
+
+            Spacer(modifier = modifier.weight(1f))
+
+            // 오른쪽 수치 표시
+            Text(
+                text = "$value",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontWeight = FontWeight.Bold
+                ),
+                modifier = modifier
+                    .padding(start = 8.dp)
+            )
+            Spacer(modifier = modifier.weight(1f))
         }
 
         // 슬라이더
@@ -105,7 +120,7 @@ fun RetouchingSlider(
             valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
             modifier = Modifier
                 .fillMaxWidth(0.8f)
-                .padding(top = 16.dp),
+                .padding(top = 8.dp),
             colors = SliderDefaults.colors(
                 thumbColor = MaterialTheme.colorScheme.primary,
                 activeTrackColor = MaterialTheme.colorScheme.primary,
@@ -117,7 +132,7 @@ fun RetouchingSlider(
 
 
 @Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun RetouchingSlidePreview() {
     PhotoRetouchingTheme {
