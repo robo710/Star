@@ -46,7 +46,6 @@ fun RetouchingSlider(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 기준선
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -114,7 +113,6 @@ fun RetouchingSlider(
                     }
                 }
 
-                // 중앙선 가이드
                 Box(
                     Modifier
                         .width(2.dp)
@@ -169,7 +167,7 @@ fun RetouchingSlidePreview() {
             valueRange = -100..100,
             listState = previewState,
             onValueChanged = {},
-            tickInterval = 10, // 강조는 10단위마다
+            tickInterval = 10,
             onResetValue = {}
         )
     }
