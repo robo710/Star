@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -31,7 +32,8 @@ fun RetouchingOptions(
     modifier: Modifier = Modifier,
     options: List<RetouchingOption>,
     selectedOption: RetouchingOption?,
-    onOptionSelected: (RetouchingOption) -> Unit
+    onOptionSelected: (RetouchingOption) -> Unit,
+    optionValues: Map<RetouchingOption, Int>
 ) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
@@ -54,6 +56,13 @@ fun RetouchingOptions(
                         onOptionSelected(option)
                     }
             ) {
+                val optionValue = optionValues[option] ?: 0 // 옵션에 해당하는 값
+                Text(
+                    text = "$optionValue", // 수치 표시
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(bottom = 4.dp) // 아이콘과 수치 사이 간격
+                )
                 Icon(
                     painter = painterResource(option.icon),
                     contentDescription = option.label,
@@ -87,7 +96,10 @@ fun RetouchingOptionsPreview(){
         RetouchingOptions(
             options = RetouchingOption.values().toList(),
             selectedOption = RetouchingOption.BRIGHTNESS,
-            onOptionSelected = {}
+            onOptionSelected = {},
+            optionValues = mapOf(RetouchingOption.BRIGHTNESS to 50,
+            RetouchingOption.CONTRAST to 30,
+            RetouchingOption.SATURATION to 70),
         )
     }
 }

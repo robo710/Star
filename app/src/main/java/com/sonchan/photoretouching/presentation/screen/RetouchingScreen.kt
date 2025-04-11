@@ -227,7 +227,8 @@ fun RetouchingScreen(
             RetouchingOptions(
                 options = RetouchingOption.entries,
                 onOptionSelected = selectRetouchingOption,
-                selectedOption = selectedOption
+                selectedOption = selectedOption,
+                optionValues = mapOf(RetouchingOption.BRIGHTNESS to brightnessValue)
             )
         }
     }
