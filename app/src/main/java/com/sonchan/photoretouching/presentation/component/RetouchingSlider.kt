@@ -104,7 +104,7 @@ fun RetouchingSlider(
             IconButton(onClick = { onResetValue() }) {
                 Icon(
                     painter = painterResource(R.drawable.reset_icon),
-                    contentDescription = "reset_Setting",
+                    contentDescription = "Reset Setting",
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
