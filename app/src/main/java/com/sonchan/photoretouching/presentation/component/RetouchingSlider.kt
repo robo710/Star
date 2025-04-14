@@ -33,8 +33,6 @@ fun RetouchingSlider(
     onResetValue: () -> Unit,
 ) {
     val tickList = (valueRange.first..valueRange.last).toList()
-    val centerIndex = tickList.indexOf((valueRange.first + valueRange.last) / 2)
-
     val coroutineScope = rememberCoroutineScope()
     val spacing = 1.dp
     val itemWidth = 6.dp
@@ -124,7 +122,7 @@ fun RetouchingSlider(
             IconButton(
                 onClick = {
                     coroutineScope.launch {
-                        val centerIdx = tickList.indexOf(0).takeIf { it >= 0 } ?: centerIndex
+                        val centerIdx = tickList.indexOf(0)
                         listState.animateScrollToItem(centerIdx)
                         onValueChanged(0)
                     }
@@ -151,7 +149,7 @@ fun RetouchingSlider(
 
     // 시작 시 위치 초기화
     LaunchedEffect(Unit) {
-        val index = tickList.indexOf(value).takeIf { it >= 0 } ?: centerIndex
+        val index = tickList.indexOf(value).takeIf { it >= 0 } ?: tickList.indexOf(0)
         listState.scrollToItem(index)
     }
 }

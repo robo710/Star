@@ -69,7 +69,8 @@ fun RetouchingRoute(
     val isFormatMenuExpanded by viewModel.isFormatMenuExpanded.collectAsState()
     val selectedRetouchingOption by viewModel.selectedRetouchingOption.collectAsState()
     val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
-    val brightnessValue by viewModel.brightnessValue.collectAsState()
+    val retouchingValues by viewModel.retouchingValues.collectAsState()
+    val brightnessValue = retouchingValues[RetouchingOption.BRIGHTNESS] ?: 0
     val brightnessSliderState = viewModel.brightnessSliderState
 
     val context = LocalContext.current
@@ -124,8 +125,8 @@ fun RetouchingRoute(
         onToggleTheme = { themeViewModel.toggleTheme() },
         brightnessValue = brightnessValue,
         brightnessSliderState = brightnessSliderState,
-        onBrightnessChanged = { viewModel.updateBrightnessValue(it) },
-        onBrightnessReset = { viewModel.onBrightValueReset() }
+        onBrightnessChanged = { viewModel.updateRetouchingValue(RetouchingOption.BRIGHTNESS, it.toFloat()) },
+        onBrightnessReset = { viewModel.resetRetouchingValue(RetouchingOption.BRIGHTNESS) }
     )
 }
 
@@ -144,7 +145,7 @@ fun RetouchingScreen(
     selectRetouchingOption: (RetouchingOption) -> Unit,
     isDarkTheme: Boolean,
     onToggleTheme: () -> Unit,
-    brightnessValue: Int,
+    brightnessValue: Number,
     brightnessSliderState: LazyListState,
     onBrightnessChanged: (Int) -> Unit,
     onBrightnessReset: () -> Unit,
@@ -214,7 +215,7 @@ fun RetouchingScreen(
         }
         if (selectedOption == RetouchingOption.BRIGHTNESS) {
             RetouchingSlider(
-                value = brightnessValue,
+                value = brightnessValue.toInt(),
                 valueRange = -100..100,
                 listState = brightnessSliderState,
                 onValueChanged = onBrightnessChanged,
@@ -231,7 +232,7 @@ fun RetouchingScreen(
                 options = RetouchingOption.entries,
                 onOptionSelected = selectRetouchingOption,
                 selectedOption = selectedOption,
-                optionValues = mapOf(RetouchingOption.BRIGHTNESS to brightnessValue)
+                optionValues = mapOf(RetouchingOption.BRIGHTNESS to brightnessValue.toInt())
             )
         }
     }

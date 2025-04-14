@@ -41,7 +41,9 @@ class RetouchingViewModel @Inject constructor(
     private val _isFormatMenuExpanded = MutableStateFlow<Boolean>(false)
     private val _selectedRetouchingOption = MutableStateFlow<RetouchingOption?>(null)
     private val _brightnessSliderState = LazyListState()
-    private val _brightnessValue = MutableStateFlow<Int>(0)
+    private val _retouchingValues = MutableStateFlow(
+        RetouchingOption.entries.associateWith { it.defaultValue }
+    )
 
     val imageUri: StateFlow<Uri?> = _imageUri
     val openGalleryEvent: SharedFlow<Unit> = _openGalleryEvent
@@ -50,7 +52,7 @@ class RetouchingViewModel @Inject constructor(
     val isFormatMenuExpanded: StateFlow<Boolean> = _isFormatMenuExpanded
     val selectedRetouchingOption: StateFlow<RetouchingOption?> = _selectedRetouchingOption
     val brightnessSliderState: LazyListState get() = _brightnessSliderState
-    val brightnessValue: StateFlow<Int> = _brightnessValue
+    val retouchingValues: StateFlow<Map<RetouchingOption, Float>> = _retouchingValues
 
     init {
         observeGalleryImage()
@@ -119,12 +121,13 @@ class RetouchingViewModel @Inject constructor(
         _selectedRetouchingOption.value = option
     }
 
-    fun updateBrightnessValue(value: Int){
-        Log.d("로그", "Updated Brightness: $value")
-        _brightnessValue.value = value
+    fun updateRetouchingValue(option: RetouchingOption, value: Float) {
+        _retouchingValues.value = _retouchingValues.value.toMutableMap().apply {
+            this[option] = value
+        }
     }
 
-    fun onBrightValueReset(){
-        _brightnessValue.value = 0
+    fun resetRetouchingValue(option: RetouchingOption) {
+        updateRetouchingValue(option, option.defaultValue)
     }
 }
