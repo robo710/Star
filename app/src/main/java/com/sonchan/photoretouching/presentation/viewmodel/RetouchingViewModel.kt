@@ -52,7 +52,7 @@ class RetouchingViewModel @Inject constructor(
     val isFormatMenuExpanded: StateFlow<Boolean> = _isFormatMenuExpanded
     val selectedRetouchingOption: StateFlow<RetouchingOption?> = _selectedRetouchingOption
     val brightnessSliderState: LazyListState get() = _brightnessSliderState
-    val retouchingValues: StateFlow<Map<RetouchingOption, Float>> = _retouchingValues
+    val retouchingValues: StateFlow<Map<RetouchingOption, Int>> = _retouchingValues
 
     init {
         observeGalleryImage()
@@ -121,7 +121,7 @@ class RetouchingViewModel @Inject constructor(
         _selectedRetouchingOption.value = option
     }
 
-    fun updateRetouchingValue(option: RetouchingOption, value: Float) {
+    fun updateRetouchingValue(option: RetouchingOption, value: Int) {
         _retouchingValues.value = _retouchingValues.value.toMutableMap().apply {
             this[option] = value
         }

@@ -125,7 +125,7 @@ fun RetouchingRoute(
         onToggleTheme = { themeViewModel.toggleTheme() },
         brightnessValue = brightnessValue,
         brightnessSliderState = brightnessSliderState,
-        onBrightnessChanged = { viewModel.updateRetouchingValue(RetouchingOption.BRIGHTNESS, it.toFloat()) },
+        onBrightnessChanged = { viewModel.updateRetouchingValue(RetouchingOption.BRIGHTNESS, it) },
         onBrightnessReset = { viewModel.resetRetouchingValue(RetouchingOption.BRIGHTNESS) }
     )
 }
