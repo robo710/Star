@@ -29,6 +29,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,8 +72,8 @@ fun RetouchingRoute(
     val selectedRetouchingOption by viewModel.selectedRetouchingOption.collectAsState()
     val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
     val retouchingValues by viewModel.retouchingValues.collectAsState()
-    val brightnessValue = retouchingValues[RetouchingOption.BRIGHTNESS] ?: 0
-    val brightnessSliderState = viewModel.brightnessSliderState
+
+    val sliderStates = remember { mutableMapOf<RetouchingOption, LazyListState>() }
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -83,7 +85,14 @@ fun RetouchingRoute(
     ) { uri: Uri? ->
         uri?.let {
             coroutineScope.launch {
-                viewModel.updateGalleryImage(it) }
+                viewModel.updateGalleryImage(it)
+            }
+        }
+    }
+
+    RetouchingOption.entries.forEach { option ->
+        if (!sliderStates.contains(option)) {
+            sliderStates[option] = rememberLazyListState()
         }
     }
 
@@ -123,12 +132,17 @@ fun RetouchingRoute(
         selectRetouchingOption = { viewModel.selectRetouchingOption(it) },
         isDarkTheme = isDarkTheme,
         onToggleTheme = { themeViewModel.toggleTheme() },
-        brightnessValue = brightnessValue,
-        brightnessSliderState = brightnessSliderState,
-        onBrightnessChanged = { viewModel.updateRetouchingValue(RetouchingOption.BRIGHTNESS, it) },
-        onBrightnessReset = { viewModel.resetRetouchingValue(RetouchingOption.BRIGHTNESS) }
+        retouchingValues = retouchingValues, // 상태 값 전달
+        sliderStates = sliderStates,
+        updateRetouchingValue = { option, newValue ->
+            viewModel.updateRetouchingValue(option, newValue)
+        },
+        resetRetouchingValue = { option ->
+            viewModel.resetRetouchingValue(option)
+        }
     )
 }
+
 
 @Composable
 fun RetouchingScreen(
@@ -145,10 +159,10 @@ fun RetouchingScreen(
     selectRetouchingOption: (RetouchingOption) -> Unit,
     isDarkTheme: Boolean,
     onToggleTheme: () -> Unit,
-    brightnessValue: Number,
-    brightnessSliderState: LazyListState,
-    onBrightnessChanged: (Int) -> Unit,
-    onBrightnessReset: () -> Unit,
+    retouchingValues: Map<RetouchingOption, Int>,
+    sliderStates: Map<RetouchingOption, LazyListState>,
+    updateRetouchingValue: (RetouchingOption, Int) -> Unit,
+    resetRetouchingValue: (RetouchingOption) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -213,14 +227,18 @@ fun RetouchingScreen(
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
-        if (selectedOption == RetouchingOption.BRIGHTNESS) {
+        selectedOption?.let { option ->
+            val sliderState = sliderStates[option] ?: rememberLazyListState()
+
             RetouchingSlider(
-                value = brightnessValue.toInt(),
-                valueRange = -100..100,
-                listState = brightnessSliderState,
-                onValueChanged = onBrightnessChanged,
+                value = retouchingValues[option] ?: option.defaultValue,
+                valueRange = option.range.first..option.range.last,
+                listState = sliderState,
+                onValueChanged = { newValue ->
+                    updateRetouchingValue(option, newValue)
+                },
                 tickInterval = 10,
-                onResetValue = onBrightnessReset
+                onResetValue = { resetRetouchingValue(option) }
             )
         }
         Box(
@@ -232,7 +250,7 @@ fun RetouchingScreen(
                 options = RetouchingOption.entries,
                 onOptionSelected = selectRetouchingOption,
                 selectedOption = selectedOption,
-                optionValues = mapOf(RetouchingOption.BRIGHTNESS to brightnessValue.toInt())
+                optionValues = retouchingValues
             )
         }
     }
@@ -256,10 +274,10 @@ fun MainScreenPreview() {
             selectRetouchingOption = {},
             isDarkTheme = false,
             onToggleTheme = {},
-            brightnessValue = 0,
-            brightnessSliderState = rememberLazyListState(),
-            onBrightnessChanged = {},
-            onBrightnessReset = {}
+            retouchingValues = mapOf(RetouchingOption.BRIGHTNESS to 50),
+            sliderStates = mapOf(RetouchingOption.BRIGHTNESS to rememberLazyListState()),
+            updateRetouchingValue = { _, _ -> },
+            resetRetouchingValue = {}
         )
     }
 }
@@ -281,10 +299,10 @@ fun MainScreenDarkThemePreview() {
             selectRetouchingOption = {},
             isDarkTheme = true,
             onToggleTheme = {},
-            brightnessValue = 0,
-            brightnessSliderState = rememberLazyListState(),
-            onBrightnessChanged = {},
-            onBrightnessReset = {},
+            retouchingValues = mapOf(RetouchingOption.BRIGHTNESS to 50),
+            sliderStates = mapOf(RetouchingOption.BRIGHTNESS to rememberLazyListState()),
+            updateRetouchingValue = { _, _ -> },
+            resetRetouchingValue = {}
         )
     }
 }
