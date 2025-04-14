@@ -118,7 +118,7 @@ fun RetouchingSlider(
                 LaunchedEffect(listState) {
                     // 슬라이더 초기화 시 한 번만 스크롤을 맞추기
                     val index = tickList.indexOf(value).takeIf { it >= 0 } ?: 0
-                    listState.animateScrollToItem(index)
+                    listState.scrollToItem(index)
                 }
 
                 Box(
