@@ -19,6 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -33,8 +35,6 @@ fun RetouchingSlider(
     onResetValue: () -> Unit,
 ) {
     val tickList = (valueRange.first..valueRange.last).toList()
-    val centerIndex = tickList.indexOf((valueRange.first + valueRange.last) / 2)
-
     val coroutineScope = rememberCoroutineScope()
     val spacing = 1.dp
     val itemWidth = 6.dp
@@ -73,10 +73,13 @@ fun RetouchingSlider(
                 contentAlignment = Alignment.Center
             ) {
                 val screenWidth = maxWidth
+                val centerPadding = remember(screenWidth) {
+                    PaddingValues(horizontal = screenWidth / 2 - itemWidth / 2)
+                }
 
                 LazyRow(
                     state = listState,
-                    contentPadding = PaddingValues(horizontal = screenWidth / 2 - itemWidth / 2),
+                    contentPadding = centerPadding,
                     horizontalArrangement = Arrangement.spacedBy(spacing),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
@@ -112,6 +115,11 @@ fun RetouchingSlider(
                         }
                     }
                 }
+                LaunchedEffect(listState) {
+                    // 슬라이더 초기화 시 한 번만 스크롤을 맞추기
+                    val index = tickList.indexOf(value).takeIf { it >= 0 } ?: 0
+                    listState.scrollToItem(index)
+                }
 
                 Box(
                     Modifier
@@ -124,9 +132,8 @@ fun RetouchingSlider(
             IconButton(
                 onClick = {
                     coroutineScope.launch {
-                        val centerIdx = tickList.indexOf(0).takeIf { it >= 0 } ?: centerIndex
+                        val centerIdx = tickList.indexOf(0).takeIf { it >= 0 } ?: 0
                         listState.animateScrollToItem(centerIdx)
-                        onValueChanged(0)
                     }
                     onResetValue()
                 },
@@ -142,17 +149,12 @@ fun RetouchingSlider(
     }
 
     // 스크롤 따라 값 업데이트
-    LaunchedEffect(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset) {
-        val itemWithOffset = listState.firstVisibleItemIndex +
-                listState.firstVisibleItemScrollOffset / (itemWidthPx + spacingPx)
-        val roundedIndex = itemWithOffset.roundToInt().coerceIn(0, tickList.lastIndex)
-        onValueChanged(tickList[roundedIndex])
-    }
-
-    // 시작 시 위치 초기화
-    LaunchedEffect(Unit) {
-        val index = tickList.indexOf(value).takeIf { it >= 0 } ?: centerIndex
-        listState.scrollToItem(index)
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.firstVisibleItemIndex +
+                listState.firstVisibleItemScrollOffset / (itemWidthPx + spacingPx) }
+            .map { it.roundToInt().coerceIn(0, tickList.lastIndex) }
+            .distinctUntilChanged()
+            .collect { onValueChanged(tickList[it]) }
     }
 }
 

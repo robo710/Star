@@ -6,8 +6,8 @@ import com.sonchan.photoretouching.R
 enum class RetouchingOption(
     val label: String,
     @DrawableRes val icon: Int,
-    val range: ClosedFloatingPointRange<Float> = -100f..100f,
-    val defaultValue: Float = 0f
+    val range: IntRange = -100..100,
+    val defaultValue: Int = 0
 ) {
     LIGHT_BALANCE("라이트 밸런스", R.drawable.light_balance_icon),
     BRIGHTNESS("밝기", R.drawable.brightness_icon),

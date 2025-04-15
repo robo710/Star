@@ -35,13 +35,14 @@ class RetouchingViewModel @Inject constructor(
 ): ViewModel() {
 
     private val _imageUri = MutableStateFlow<Uri?>(null)
-    private val _openGalleryEvent = MutableSharedFlow<Unit>() // 이벤트 트리거 용도
+    private val _openGalleryEvent = MutableSharedFlow<Unit>()
     private val _saveResult = MutableStateFlow<Boolean?>(null)
     private val _selectedFormat = MutableStateFlow<ImageFormat>(ImageFormat.JPG)
     private val _isFormatMenuExpanded = MutableStateFlow<Boolean>(false)
     private val _selectedRetouchingOption = MutableStateFlow<RetouchingOption?>(null)
-    private val _brightnessSliderState = LazyListState()
-    private val _brightnessValue = MutableStateFlow<Int>(0)
+    private val _retouchingValues = MutableStateFlow(
+        RetouchingOption.entries.associateWith { it.defaultValue }
+    )
 
     val imageUri: StateFlow<Uri?> = _imageUri
     val openGalleryEvent: SharedFlow<Unit> = _openGalleryEvent
@@ -49,8 +50,7 @@ class RetouchingViewModel @Inject constructor(
     val selectedFormat: StateFlow<ImageFormat> = _selectedFormat
     val isFormatMenuExpanded: StateFlow<Boolean> = _isFormatMenuExpanded
     val selectedRetouchingOption: StateFlow<RetouchingOption?> = _selectedRetouchingOption
-    val brightnessSliderState: LazyListState get() = _brightnessSliderState
-    val brightnessValue: StateFlow<Int> = _brightnessValue
+    val retouchingValues: StateFlow<Map<RetouchingOption, Int>> = _retouchingValues
 
     init {
         observeGalleryImage()
@@ -58,30 +58,28 @@ class RetouchingViewModel @Inject constructor(
 
     private fun observeGalleryImage(){
         getGalleryImageUseCase()
-            .onEach { uri ->
-                _imageUri.value = uri
-            }
+            .onEach { uri -> _imageUri.value = uri }
             .launchIn(viewModelScope)
     }
 
-    private fun uriToBitmap(uri: Uri): Bitmap?{
+    private fun uriToBitmap(uri: Uri): Bitmap? {
         return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 val source = ImageDecoder.createSource(contentResolver, uri)
                 ImageDecoder.decodeBitmap(source)
             } else {
                 MediaStore.Images.Media.getBitmap(contentResolver, uri)
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             null
         }
     }
 
-    suspend fun updateGalleryImage(uri: Uri?){
+    suspend fun updateGalleryImage(uri: Uri?) {
         setGalleryImageUseCase(uri)
     }
 
-    fun requestOpenGallery(){
+    fun requestOpenGallery() {
         viewModelScope.launch {
             _openGalleryEvent.emit(Unit)
         }
@@ -99,7 +97,7 @@ class RetouchingViewModel @Inject constructor(
         }
     }
 
-    fun updateSelectedFormat(format: ImageFormat){
+    fun updateSelectedFormat(format: ImageFormat) {
         _selectedFormat.value = format
     }
 
@@ -111,20 +109,21 @@ class RetouchingViewModel @Inject constructor(
         _isFormatMenuExpanded.value = false
     }
 
-    fun clearSaveResult(){
+    fun clearSaveResult() {
         _saveResult.value = null
     }
 
-    fun selectRetouchingOption(option: RetouchingOption){
+    fun selectRetouchingOption(option: RetouchingOption) {
         _selectedRetouchingOption.value = option
     }
 
-    fun updateBrightnessValue(value: Int){
-        Log.d("로그", "Updated Brightness: $value")
-        _brightnessValue.value = value
+    fun updateRetouchingValue(option: RetouchingOption, value: Int) {
+        val updatedValues = _retouchingValues.value.toMutableMap()
+        updatedValues[option] = value
+        _retouchingValues.value = updatedValues
     }
 
-    fun onBrightValueReset(){
-        _brightnessValue.value = 0
+    fun resetRetouchingValue(option: RetouchingOption) {
+        updateRetouchingValue(option, option.defaultValue)
     }
 }
