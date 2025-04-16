@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sonchan.photoretouching.domain.model.ImageFormat
@@ -15,6 +14,7 @@ import com.sonchan.photoretouching.domain.model.RetouchingOption
 import com.sonchan.photoretouching.domain.usecase.main.GetGalleryImageUseCase
 import com.sonchan.photoretouching.domain.usecase.main.SaveImageToGalleryUseCase
 import com.sonchan.photoretouching.domain.usecase.main.SetGalleryImageUseCase
+import com.sonchan.photoretouching.util.ImageEditor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,8 +22,8 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.sql.Statement
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,6 +43,7 @@ class RetouchingViewModel @Inject constructor(
     private val _retouchingValues = MutableStateFlow(
         RetouchingOption.entries.associateWith { it.defaultValue }
     )
+    private val _retouchedBitmap = MutableStateFlow<Bitmap?>(null)
 
     val imageUri: StateFlow<Uri?> = _imageUri
     val openGalleryEvent: SharedFlow<Unit> = _openGalleryEvent
@@ -51,6 +52,7 @@ class RetouchingViewModel @Inject constructor(
     val isFormatMenuExpanded: StateFlow<Boolean> = _isFormatMenuExpanded
     val selectedRetouchingOption: StateFlow<RetouchingOption?> = _selectedRetouchingOption
     val retouchingValues: StateFlow<Map<RetouchingOption, Int>> = _retouchingValues
+    val retouchedBitmap: StateFlow<Bitmap?> = _retouchedBitmap
 
     init {
         observeGalleryImage()
@@ -75,6 +77,24 @@ class RetouchingViewModel @Inject constructor(
         }
     }
 
+    private fun applyRetouching(original: Bitmap, values: Map<RetouchingOption, Int>): Bitmap {
+        Log.d("로그", "applyRetouching 호출됨")
+
+        var result = original.copy(Bitmap.Config.ARGB_8888, true) // 원본 이미지를 복사하여 결과 비트맵으로 설정
+
+        values.forEach { (option, value) ->
+            Log.d("로그", "보정 옵션: ${option}, 값: $value")
+            result = when (option) {
+                RetouchingOption.BRIGHTNESS -> {
+                    ImageEditor.applyBrightness(result, value)
+                }
+                else -> result
+            }
+        }
+
+        return result
+    }
+
     suspend fun updateGalleryImage(uri: Uri?) {
         setGalleryImageUseCase(uri)
     }
@@ -86,13 +106,11 @@ class RetouchingViewModel @Inject constructor(
     }
 
     fun saveImage() {
-        imageUri.value?.let { uri ->
-            val bitmap = uriToBitmap(uri)
+        viewModelScope.launch {
+            val bitmap = retouchedBitmap.value ?: uriToBitmap(imageUri.value ?: return@launch)
             bitmap?.let {
-                viewModelScope.launch {
-                    val result = saveImageToGalleryUseCase(it, selectedFormat.value)
-                    _saveResult.value = result
-                }
+                val result = saveImageToGalleryUseCase(it, selectedFormat.value)
+                _saveResult.value = result
             }
         }
     }
@@ -117,10 +135,23 @@ class RetouchingViewModel @Inject constructor(
         _selectedRetouchingOption.value = option
     }
 
-    fun updateRetouchingValue(option: RetouchingOption, value: Int) {
-        val updatedValues = _retouchingValues.value.toMutableMap()
-        updatedValues[option] = value
-        _retouchingValues.value = updatedValues
+    fun updateRetouchingValue(option: RetouchingOption, newValue: Int) {
+        // 보정 값을 업데이트
+        _retouchingValues.update { it.toMutableMap().apply { put(option, newValue) } }
+        Log.d("로그", "retouchedBitmap -> ${retouchedBitmap.value}")
+
+        val bitmap = imageUri.value?.let { uri ->
+            uriToBitmap(uri)
+        }
+
+        if (bitmap != null) {
+            val edited = applyRetouching(bitmap, _retouchingValues.value)
+            _retouchedBitmap.value = edited // 보정된 비트맵 업데이트
+        } else {
+            Log.e("로그", "이미지 로딩 실패")
+        }
+
+        Log.d("로그", "option -> $option value -> $newValue")
     }
 
     fun resetRetouchingValue(option: RetouchingOption) {
