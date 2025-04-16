@@ -1,5 +1,6 @@
 package com.sonchan.photoretouching.presentation.screen
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -34,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
@@ -72,6 +74,7 @@ fun RetouchingRoute(
     val selectedRetouchingOption by viewModel.selectedRetouchingOption.collectAsState()
     val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
     val retouchingValues by viewModel.retouchingValues.collectAsState()
+    val retouchedBitmap by viewModel.retouchedBitmap.collectAsState()
 
     val sliderStates = remember { mutableMapOf<RetouchingOption, LazyListState>() }
 
@@ -139,7 +142,8 @@ fun RetouchingRoute(
         },
         resetRetouchingValue = { option ->
             viewModel.resetRetouchingValue(option)
-        }
+        },
+        bitmap = retouchedBitmap,
     )
 }
 
@@ -163,6 +167,7 @@ fun RetouchingScreen(
     sliderStates: Map<RetouchingOption, LazyListState>,
     updateRetouchingValue: (RetouchingOption, Int) -> Unit,
     resetRetouchingValue: (RetouchingOption) -> Unit,
+    bitmap: Bitmap?,
 ) {
     Column(
         modifier = modifier
@@ -206,7 +211,16 @@ fun RetouchingScreen(
 
         HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.outline)
 
-        imageUri?.let {
+        bitmap?.let {
+            Image(
+                bitmap = it.asImageBitmap(),
+                contentDescription = "Edited Image",
+                modifier = modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentScale = ContentScale.Fit
+            )
+        } ?: imageUri?.let {
             Image(
                 painter = rememberAsyncImagePainter(it),
                 contentDescription = "Selected Image",
@@ -277,7 +291,8 @@ fun MainScreenPreview() {
             retouchingValues = mapOf(RetouchingOption.BRIGHTNESS to 50),
             sliderStates = mapOf(RetouchingOption.BRIGHTNESS to rememberLazyListState()),
             updateRetouchingValue = { _, _ -> },
-            resetRetouchingValue = {}
+            resetRetouchingValue = {},
+            bitmap = null
         )
     }
 }
@@ -302,7 +317,8 @@ fun MainScreenDarkThemePreview() {
             retouchingValues = mapOf(RetouchingOption.BRIGHTNESS to 50),
             sliderStates = mapOf(RetouchingOption.BRIGHTNESS to rememberLazyListState()),
             updateRetouchingValue = { _, _ -> },
-            resetRetouchingValue = {}
+            resetRetouchingValue = {},
+            bitmap = null
         )
     }
 }
