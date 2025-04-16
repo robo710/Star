@@ -77,6 +77,24 @@ class RetouchingViewModel @Inject constructor(
         }
     }
 
+    private fun applyRetouching(original: Bitmap, values: Map<RetouchingOption, Int>): Bitmap {
+        Log.d("로그", "applyRetouching 호출됨")
+
+        var result = original.copy(Bitmap.Config.ARGB_8888, true) // 원본 이미지를 복사하여 결과 비트맵으로 설정
+
+        values.forEach { (option, value) ->
+            Log.d("로그", "보정 옵션: ${option}, 값: $value")
+            result = when (option) {
+                RetouchingOption.BRIGHTNESS -> {
+                    ImageEditor.applyBrightness(result, value)
+                }
+                else -> result
+            }
+        }
+
+        return result
+    }
+
     suspend fun updateGalleryImage(uri: Uri?) {
         setGalleryImageUseCase(uri)
     }
@@ -133,28 +151,10 @@ class RetouchingViewModel @Inject constructor(
             Log.e("로그", "이미지 로딩 실패")
         }
 
-        Log.d("로그", "option -> ${option} value -> ${newValue}")
+        Log.d("로그", "option -> $option value -> $newValue")
     }
 
     fun resetRetouchingValue(option: RetouchingOption) {
         updateRetouchingValue(option, option.defaultValue)
-    }
-
-    fun applyRetouching(original: Bitmap, values: Map<RetouchingOption, Int>): Bitmap {
-        Log.d("로그", "applyRetouching 호출됨")
-
-        var result = original.copy(Bitmap.Config.ARGB_8888, true) // 원본 이미지를 복사하여 결과 비트맵으로 설정
-
-        values.forEach { (option, value) ->
-            Log.d("로그", "보정 옵션: ${option}, 값: ${value}")
-            result = when (option) {
-                RetouchingOption.BRIGHTNESS -> {
-                    ImageEditor.applyBrightness(result, value)
-                }
-                else -> result
-            }
-        }
-
-        return result
     }
 }
