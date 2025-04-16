@@ -1,6 +1,7 @@
 package com.sonchan.photoretouching.presentation.viewmodel
 
 import android.content.ContentResolver
+import android.content.ContentValues.TAG
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -120,11 +121,22 @@ class RetouchingViewModel @Inject constructor(
     }
 
     fun updateRetouchingValue(option: RetouchingOption, newValue: Int) {
+        // 보정 값을 업데이트
         _retouchingValues.update { it.toMutableMap().apply { put(option, newValue) } }
-        retouchedBitmap.value?.let { original ->
-            val edited = applyRetouching(original, _retouchingValues.value)
-            _retouchedBitmap.value = edited
+        Log.d("로그", "retouchedBitmap -> ${retouchedBitmap.value}")
+
+        val bitmap = imageUri.value?.let { uri ->
+            uriToBitmap(uri)
         }
+
+        if (bitmap != null) {
+            val edited = applyRetouching(bitmap, _retouchingValues.value)
+            _retouchedBitmap.value = edited // 보정된 비트맵 업데이트
+        } else {
+            Log.e("로그", "이미지 로딩 실패")
+        }
+
+        Log.d("로그", "option -> ${option} value -> ${newValue}")
     }
 
     fun resetRetouchingValue(option: RetouchingOption) {
@@ -132,11 +144,17 @@ class RetouchingViewModel @Inject constructor(
     }
 
     fun applyRetouching(original: Bitmap, values: Map<RetouchingOption, Int>): Bitmap {
-        var result = original.copy(original.config ?: Bitmap.Config.ARGB_8888, true)
+        Log.d("로그", "applyRetouching 호출됨")
+
+        var result = original.copy(Bitmap.Config.ARGB_8888, true) // 원본 이미지를 복사하여 결과 비트맵으로 설정
 
         values.forEach { (option, value) ->
-            result = when(option) {
-                RetouchingOption.BRIGHTNESS -> ImageEditor.applyBrightness(result, value)
+            Log.d("로그", "보정 옵션: ${option}, 값: ${value}")
+            result = when (option) {
+                RetouchingOption.BRIGHTNESS -> {
+                    Log.d("로그", "밝기 보정 적용 중")
+                    ImageEditor.applyBrightness(result, value)
+                }
                 else -> result
             }
         }
