@@ -28,8 +28,8 @@ fun SplashScreen(
     onNavigateToMain: () -> Unit
 ) {
     LaunchedEffect(Unit){
-        delay(1000L)
-        onNavigateToMain
+        delay(2000L)
+        onNavigateToMain()
     }
 
     Box(
