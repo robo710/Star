@@ -1,14 +1,12 @@
 package com.sonchan.photoretouching.presentation.viewmodel
 
 import android.content.ContentResolver
-import android.content.ContentValues.TAG
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sonchan.photoretouching.domain.model.ImageFormat
@@ -26,7 +24,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.sql.Statement
 import javax.inject.Inject
 
 @HiltViewModel
@@ -152,7 +149,6 @@ class RetouchingViewModel @Inject constructor(
             Log.d("로그", "보정 옵션: ${option}, 값: ${value}")
             result = when (option) {
                 RetouchingOption.BRIGHTNESS -> {
-                    Log.d("로그", "밝기 보정 적용 중")
                     ImageEditor.applyBrightness(result, value)
                 }
                 else -> result
