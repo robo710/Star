@@ -8,9 +8,9 @@ import android.graphics.Paint
 import android.util.Log
 
 object ImageEditor {
-    fun applyBrightness(src: Bitmap, value: Int): Bitmap {
-        val bmp = Bitmap.createBitmap(src.width, src.height, src.config ?: Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bmp)
+    fun applyBrightness(bitmap: Bitmap, value: Int): Bitmap {
+        val result = Bitmap.createBitmap(bitmap.width, bitmap.height, bitmap.config ?: Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(result)
         val paint = Paint()
         val brightness = value * 2.55f
 
@@ -26,7 +26,29 @@ object ImageEditor {
         )
 
         paint.colorFilter = ColorMatrixColorFilter(colorMatrix)
-        canvas.drawBitmap(src, 0f, 0f, paint)
-        return bmp
+        canvas.drawBitmap(bitmap, 0f, 0f, paint)
+        return result
+    }
+
+    fun applyExposure(bitmap: Bitmap, value: Int): Bitmap {
+        val result = Bitmap.createBitmap(bitmap.width, bitmap.height, bitmap.config ?: Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(result)
+        val paint = Paint()
+        val exposure = value * 2.55f
+
+        Log.d("로그", "Brightness value: $exposure")
+
+        val colorMatrix = ColorMatrix(
+            floatArrayOf(
+                exposure, 0f, 0f, 0f, 0f,
+                0f, exposure, 0f, 0f, 0f,
+                0f, 0f, exposure, 0f, 0f,
+                0f, 0f, 0f, 1f, 0f
+            )
+        )
+
+        paint.colorFilter = ColorMatrixColorFilter(colorMatrix)
+        canvas.drawBitmap(bitmap, 0f, 0f, paint)
+        return result
     }
 }
