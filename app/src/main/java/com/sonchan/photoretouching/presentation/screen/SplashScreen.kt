@@ -1,5 +1,7 @@
 package com.sonchan.photoretouching.presentation.screen
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,23 +14,45 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.presentation.component.DarkThemeDevicePreview
 import com.sonchan.photoretouching.presentation.component.DevicePreviews
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
-import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
     modifier: Modifier = Modifier,
     onNavigateToMain: () -> Unit
 ) {
-    LaunchedEffect(Unit){
-        delay(2000L)
+    var visible by remember { mutableStateOf(false) }
+
+    // alpha 애니메이션 상태
+    val alpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = tween(durationMillis = 1000),
+        label = "fade"
+    )
+
+    LaunchedEffect(Unit) {
+        // 처음엔 안 보이다가
+        delay(300L)
+
+        visible = true
+        delay(1200L)
+
+        visible = false
+        delay(1000L)
+
         onNavigateToMain()
     }
 
@@ -37,17 +61,20 @@ fun SplashScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
-    ){
+    ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painter = painterResource(id = R.drawable.splash_icon),
                 contentDescription = "Logo",
-                modifier = Modifier.size(150.dp)
+                modifier = Modifier
+                    .size(150.dp)
+                    .alpha(alpha)
             )
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = "Star",
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.alpha(alpha)
             )
         }
     }
@@ -56,7 +83,7 @@ fun SplashScreen(
 @DevicePreviews
 @DarkThemeDevicePreview
 @Composable
-fun SplashScreenPreview(){
+fun SplashScreenPreview() {
     PhotoRetouchingTheme {
         SplashScreen(
             onNavigateToMain = {}
