@@ -36,7 +36,6 @@ fun SplashScreen(
 ) {
     var visible by remember { mutableStateOf(false) }
 
-    // alpha 애니메이션 상태
     val alpha by animateFloatAsState(
         targetValue = if (visible) 1f else 0f,
         animationSpec = tween(durationMillis = 1000),
@@ -44,14 +43,13 @@ fun SplashScreen(
     )
 
     LaunchedEffect(Unit) {
-        // 처음엔 안 보이다가
         delay(300L)
 
         visible = true
-        delay(1200L)
+        delay(1500L)
 
         visible = false
-        delay(1000L)
+        delay(1500L)
 
         onNavigateToMain()
     }
@@ -67,7 +65,7 @@ fun SplashScreen(
                 painter = painterResource(id = R.drawable.splash_icon),
                 contentDescription = "Logo",
                 modifier = Modifier
-                    .size(150.dp)
+                    .size(160.dp)
                     .alpha(alpha)
             )
             Spacer(modifier = Modifier.height(20.dp))
