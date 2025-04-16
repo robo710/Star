@@ -12,7 +12,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.sonchan.photoretouching.presentation.navigation.RetouchingNavGraph
-import com.sonchan.photoretouching.presentation.screen.RetouchingRoute
 import com.sonchan.photoretouching.presentation.viewmodel.ThemeViewModel
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
 import dagger.hilt.android.AndroidEntryPoint
