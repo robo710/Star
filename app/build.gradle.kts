@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.androidx.hilt.navigation.compose) // Hilt ViewModel + Compose 지원 추가
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.core.splashscreen)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
