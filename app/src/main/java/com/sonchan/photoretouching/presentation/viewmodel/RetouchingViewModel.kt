@@ -85,7 +85,7 @@ class RetouchingViewModel @Inject constructor(
         values.forEach { (option, value) ->
             result = when (option) {
                 RetouchingOption.BRIGHTNESS -> {
-                    ImageEditor.applyBrightness(result, value)
+                    ImageEditor.applyBrightness(context, result, value)
                 }
                 RetouchingOption.EXPOSURE -> {
                     ImageEditor.applyExposure(result, value)

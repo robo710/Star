@@ -9,33 +9,18 @@ import android.graphics.Paint
 import android.util.Log
 import kotlin.math.pow
 import androidx.core.graphics.createBitmap
+import com.sonchan.photoretouching.gpu.BrightnessFilter
 import com.sonchan.photoretouching.gpu.HighlightFilter
 import com.sonchan.photoretouching.gpu.ShadowFilter
 import jp.co.cyberagent.android.gpuimage.GPUImage
 
 object ImageEditor {
-    fun applyBrightness(bitmap: Bitmap, value: Int): Bitmap {
-        val result =
-            createBitmap(bitmap.width, bitmap.height, bitmap.config ?: Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(result)
-        val paint = Paint()
-
-        val brightness = value * 2.55f
-
-        Log.d("로그", "Brightness value: $brightness")
-
-        val colorMatrix = ColorMatrix(
-            floatArrayOf(
-                1f, 0f, 0f, 0f, brightness,
-                0f, 1f, 0f, 0f, brightness,
-                0f, 0f, 1f, 0f, brightness,
-                0f, 0f, 0f, 1f, 0f
-            )
-        )
-
-        paint.colorFilter = ColorMatrixColorFilter(colorMatrix)
-        canvas.drawBitmap(bitmap, 0f, 0f, paint)
-        return result
+    fun applyBrightness(context: Context, bitmap: Bitmap, value: Int): Bitmap {
+        val intensity = value * 2.55f
+        val gpuImage = GPUImage(context)
+        gpuImage.setImage(bitmap)
+        gpuImage.setFilter(BrightnessFilter(intensity))
+        return gpuImage.bitmapWithFilterApplied
     }
 
     fun applyExposure(bitmap: Bitmap, value: Int): Bitmap {
