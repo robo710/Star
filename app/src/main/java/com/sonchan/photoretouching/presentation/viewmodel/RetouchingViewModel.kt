@@ -91,6 +91,9 @@ class RetouchingViewModel @Inject constructor(
                 RetouchingOption.EXPOSURE -> {
                     ImageEditor.applyExposure(result, value)
                 }
+                RetouchingOption.CONTRAST -> {
+                    ImageEditor.applyConstruct(result, value)
+                }
                 else -> result
             }
         }
@@ -100,6 +103,9 @@ class RetouchingViewModel @Inject constructor(
 
     suspend fun updateGalleryImage(uri: Uri?) {
         setGalleryImageUseCase(uri)
+        _retouchingValues.value = RetouchingOption.entries.associateWith { it.defaultValue }
+        _selectedRetouchingOption.value = null
+        _retouchedBitmap.value = null
     }
 
     fun requestOpenGallery() {
