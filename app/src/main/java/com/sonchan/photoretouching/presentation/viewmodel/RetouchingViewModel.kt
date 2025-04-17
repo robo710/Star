@@ -99,6 +99,9 @@ class RetouchingViewModel @Inject constructor(
                 RetouchingOption.SHADOW -> {
                     ImageEditor.applyShadow(context, result, value)
                 }
+                RetouchingOption.SATURATION -> {
+                    ImageEditor.applySaturation(context, result, value)
+                }
                 else -> result
             }
         }
