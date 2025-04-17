@@ -73,6 +73,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.hiltAndroid)  // Hilt 의존성 추가
     kapt(libs.hiltCompiler)  // Hilt 컴파일러 의존성 추가
+
+    implementation(libs.gpuimage) // GPUImage 의존성 추가
+
 }
 
 // Kapt 설정 추가
