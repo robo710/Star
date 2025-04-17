@@ -83,4 +83,28 @@ object ImageEditor {
         canvas.drawBitmap(bitmap, 0f, 0f, paint)
         return result
     }
+
+    fun applyHighlight(bitmap: Bitmap, value: Int): Bitmap {
+        val result =
+            createBitmap(bitmap.width, bitmap.height, bitmap.config ?: Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(result)
+        val paint = Paint()
+
+        val highlight = 1f + (value / 100f)
+
+        Log.d("로그", "highlight value: $highlight")
+
+        val colorMatrix = ColorMatrix(
+            floatArrayOf(
+                1f, 0f, 0f, 0f, 0f,
+                0f, 1f, 0f, 0f, 0f,
+                0f, 0f, highlight, 0f, 0f,
+                0f, 0f, 0f, 1f, 0f
+            )
+        )
+
+        paint.colorFilter = ColorMatrixColorFilter(colorMatrix)
+        canvas.drawBitmap(bitmap, 0f, 0f, paint)
+        return result
+    }
 }
