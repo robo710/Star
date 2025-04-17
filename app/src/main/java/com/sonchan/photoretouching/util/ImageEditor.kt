@@ -27,7 +27,7 @@ object ImageEditor {
     }
 
     fun applyContrast(context: Context, bitmap: Bitmap, value: Int): Bitmap {
-        val intensity = value / 100f
+        val intensity = (value + 100) / 100f
         val gpuImage = GPUImage(context)
         gpuImage.setImage(bitmap)
         gpuImage.setFilter(GPUImageContrastFilter(intensity))
