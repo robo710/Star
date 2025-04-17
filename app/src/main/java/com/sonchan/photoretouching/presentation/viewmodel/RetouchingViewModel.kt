@@ -91,6 +91,9 @@ class RetouchingViewModel @Inject constructor(
                 RetouchingOption.EXPOSURE -> {
                     ImageEditor.applyExposure(result, value)
                 }
+                RetouchingOption.CONTRAST -> {
+                    ImageEditor.applyConstruct(result, value)
+                }
                 else -> result
             }
         }
