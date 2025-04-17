@@ -1,6 +1,7 @@
 package com.sonchan.photoretouching.presentation.viewmodel
 
 import android.content.ContentResolver
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -77,7 +78,7 @@ class RetouchingViewModel @Inject constructor(
         }
     }
 
-    private fun applyRetouching(original: Bitmap, values: Map<RetouchingOption, Int>): Bitmap {
+    private fun applyRetouching(context: Context, original: Bitmap, values: Map<RetouchingOption, Int>): Bitmap {
 
         var result = original.copy(Bitmap.Config.ARGB_8888, true)
 
@@ -93,7 +94,7 @@ class RetouchingViewModel @Inject constructor(
                     ImageEditor.applyConstruct(result, value)
                 }
                 RetouchingOption.HIGHLIGHT -> {
-                    ImageEditor.applyHighlight(result, value)
+                    ImageEditor.applyHighlight(context, result, value)
                 }
                 RetouchingOption.SHADOW -> {
                     ImageEditor.applyShadow(result, value)
@@ -148,7 +149,7 @@ class RetouchingViewModel @Inject constructor(
         _selectedRetouchingOption.value = option
     }
 
-    fun updateRetouchingValue(option: RetouchingOption, newValue: Int) {
+    fun updateRetouchingValue(context: Context, option: RetouchingOption, newValue: Int) {
         _retouchingValues.update { it.toMutableMap().apply { put(option, newValue) } }
 
         val bitmap = imageUri.value?.let { uri ->
@@ -156,7 +157,7 @@ class RetouchingViewModel @Inject constructor(
         }
 
         if (bitmap != null) {
-            val edited = applyRetouching(bitmap, _retouchingValues.value)
+            val edited = applyRetouching(context, bitmap, _retouchingValues.value)
             _retouchedBitmap.value = edited
         } else {
             Log.e("로그", "이미지 로딩 실패")
@@ -165,7 +166,7 @@ class RetouchingViewModel @Inject constructor(
         Log.d("로그", "option -> $option value -> $newValue")
     }
 
-    fun resetRetouchingValue(option: RetouchingOption) {
-        updateRetouchingValue(option, option.defaultValue)
+    fun resetRetouchingValue(context: Context, option: RetouchingOption) {
+        updateRetouchingValue(context, option, option.defaultValue)
     }
 }

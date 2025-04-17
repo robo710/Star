@@ -138,10 +138,10 @@ fun RetouchingRoute(
         retouchingValues = retouchingValues, // 상태 값 전달
         sliderStates = sliderStates,
         updateRetouchingValue = { option, newValue ->
-            viewModel.updateRetouchingValue(option, newValue)
+            viewModel.updateRetouchingValue(context, option, newValue)
         },
         resetRetouchingValue = { option ->
-            viewModel.resetRetouchingValue(option)
+            viewModel.resetRetouchingValue(context, option)
         },
         bitmap = retouchedBitmap,
     )
