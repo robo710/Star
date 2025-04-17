@@ -2,8 +2,6 @@ package com.sonchan.photoretouching.util
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.sonchan.photoretouching.gpu.HighlightFilter
-import com.sonchan.photoretouching.gpu.ShadowFilter
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageBrightnessFilter
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageContrastFilter
