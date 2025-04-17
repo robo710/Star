@@ -6,11 +6,14 @@ import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
 import android.util.Log
+import kotlin.math.pow
+import androidx.core.graphics.createBitmap
 
 object ImageEditor {
-    fun applyBrightness(src: Bitmap, value: Int): Bitmap {
-        val bmp = Bitmap.createBitmap(src.width, src.height, src.config ?: Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bmp)
+    fun applyBrightness(bitmap: Bitmap, value: Int): Bitmap {
+        val result =
+            createBitmap(bitmap.width, bitmap.height, bitmap.config ?: Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(result)
         val paint = Paint()
         val brightness = value * 2.55f
 
@@ -26,7 +29,31 @@ object ImageEditor {
         )
 
         paint.colorFilter = ColorMatrixColorFilter(colorMatrix)
-        canvas.drawBitmap(src, 0f, 0f, paint)
-        return bmp
+        canvas.drawBitmap(bitmap, 0f, 0f, paint)
+        return result
+    }
+
+    fun applyExposure(bitmap: Bitmap, value: Int): Bitmap {
+        val result =
+            createBitmap(bitmap.width, bitmap.height, bitmap.config ?: Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(result)
+        val paint = Paint()
+        val exposure = value / 100f * 1.5f
+        val exposureScale = 2.0.pow(exposure.toDouble()).toFloat()
+
+        Log.d("로그", "Exposure value: $exposureScale")
+
+        val colorMatrix = ColorMatrix(
+            floatArrayOf(
+                exposureScale, 0f, 0f, 0f, 0f,
+                0f, exposureScale, 0f, 0f, 0f,
+                0f, 0f, exposureScale, 0f, 0f,
+                0f, 0f, 0f, 1f, 0f
+            )
+        )
+
+        paint.colorFilter = ColorMatrixColorFilter(colorMatrix)
+        canvas.drawBitmap(bitmap, 0f, 0f, paint)
+        return result
     }
 }
