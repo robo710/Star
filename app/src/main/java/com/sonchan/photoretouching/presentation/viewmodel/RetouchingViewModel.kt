@@ -97,7 +97,7 @@ class RetouchingViewModel @Inject constructor(
                     ImageEditor.applyHighlight(context, result, value)
                 }
                 RetouchingOption.SHADOW -> {
-                    ImageEditor.applyShadow(result, value)
+                    ImageEditor.applyShadow(context, result, value)
                 }
                 else -> result
             }
