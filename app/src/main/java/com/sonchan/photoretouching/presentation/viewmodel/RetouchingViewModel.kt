@@ -88,7 +88,7 @@ class RetouchingViewModel @Inject constructor(
                     ImageEditor.applyBrightness(context, result, value)
                 }
                 RetouchingOption.EXPOSURE -> {
-                    ImageEditor.applyExposure(result, value)
+                    ImageEditor.applyExposure(context, result, value)
                 }
                 RetouchingOption.CONTRAST -> {
                     ImageEditor.applyConstruct(result, value)
