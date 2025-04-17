@@ -65,7 +65,7 @@ object ImageEditor {
         val canvas = Canvas(result)
         val paint = Paint()
 
-        val construct = 1f + (value / 100f) // -100~100 -> 0f ~ 2f
+        val construct = 1f + (value / 100f)
         val translate = 128f * (1 - construct)
 
         Log.d("로그", "construct value: $construct, translate value : $translate")
