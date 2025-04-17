@@ -6,6 +6,7 @@ import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
 import android.util.Log
+import kotlin.math.pow
 
 object ImageEditor {
     fun applyBrightness(bitmap: Bitmap, value: Int): Bitmap {
@@ -34,15 +35,16 @@ object ImageEditor {
         val result = Bitmap.createBitmap(bitmap.width, bitmap.height, bitmap.config ?: Bitmap.Config.ARGB_8888)
         val canvas = Canvas(result)
         val paint = Paint()
-        val exposure = value * 2.55f
+        val exposure = value / 100f * 1.5f
+        val exposureScale = 2.0.pow(exposure.toDouble()).toFloat()
 
-        Log.d("로그", "Brightness value: $exposure")
+        Log.d("로그", "Exposure value: $exposureScale")
 
         val colorMatrix = ColorMatrix(
             floatArrayOf(
-                exposure, 0f, 0f, 0f, 0f,
-                0f, exposure, 0f, 0f, 0f,
-                0f, 0f, exposure, 0f, 0f,
+                exposureScale, 0f, 0f, 0f, 0f,
+                0f, exposureScale, 0f, 0f, 0f,
+                0f, 0f, exposureScale, 0f, 0f,
                 0f, 0f, 0f, 1f, 0f
             )
         )
