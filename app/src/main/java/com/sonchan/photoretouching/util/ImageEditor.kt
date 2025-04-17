@@ -2,15 +2,6 @@ package com.sonchan.photoretouching.util
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
-import android.graphics.Paint
-import android.util.Log
-import kotlin.math.pow
-import androidx.core.graphics.createBitmap
-import com.sonchan.photoretouching.gpu.BrightnessFilter
-import com.sonchan.photoretouching.gpu.ExposureFilter
 import com.sonchan.photoretouching.gpu.HighlightFilter
 import com.sonchan.photoretouching.gpu.ShadowFilter
 import jp.co.cyberagent.android.gpuimage.GPUImage
