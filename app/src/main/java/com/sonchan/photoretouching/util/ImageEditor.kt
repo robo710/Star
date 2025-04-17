@@ -17,18 +17,18 @@ import jp.co.cyberagent.android.gpuimage.GPUImage
 
 object ImageEditor {
     fun applyBrightness(context: Context, bitmap: Bitmap, value: Int): Bitmap {
-        val intensity = value * 2.55f
+        val brightness = value / 300f
         val gpuImage = GPUImage(context)
         gpuImage.setImage(bitmap)
-        gpuImage.setFilter(BrightnessFilter(intensity))
+        gpuImage.setFilter(BrightnessFilter(brightness))
         return gpuImage.bitmapWithFilterApplied
     }
 
     fun applyExposure(context: Context, bitmap: Bitmap, value: Int): Bitmap {
-        val intensity = 2.0.pow( value / 100f * 1.5f.toDouble()).toFloat()
+        val exposure = value / 200f
         val gpuImage = GPUImage(context)
         gpuImage.setImage(bitmap)
-        gpuImage.setFilter(ExposureFilter(intensity))
+        gpuImage.setFilter(ExposureFilter(exposure))
         return gpuImage.bitmapWithFilterApplied
     }
 

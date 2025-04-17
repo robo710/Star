@@ -25,6 +25,6 @@ class BrightnessFilter(private val brightness: Float) : GPUImageFilter(
 
     override fun onInitialized() {
         super.onInitialized()
-        setFloat(brightnessLocation, brightness / 255f) // 0 ~ 1 로 정규화
+        setFloat(brightnessLocation, brightness)
     }
 }
