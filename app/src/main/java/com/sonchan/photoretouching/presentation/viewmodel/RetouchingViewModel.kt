@@ -78,12 +78,10 @@ class RetouchingViewModel @Inject constructor(
     }
 
     private fun applyRetouching(original: Bitmap, values: Map<RetouchingOption, Int>): Bitmap {
-        Log.d("로그", "applyRetouching 호출됨")
 
-        var result = original.copy(Bitmap.Config.ARGB_8888, true) // 원본 이미지를 복사하여 결과 비트맵으로 설정
+        var result = original.copy(Bitmap.Config.ARGB_8888, true)
 
         values.forEach { (option, value) ->
-            Log.d("로그", "보정 옵션: ${option}, 값: $value")
             result = when (option) {
                 RetouchingOption.BRIGHTNESS -> {
                     ImageEditor.applyBrightness(result, value)
@@ -148,9 +146,7 @@ class RetouchingViewModel @Inject constructor(
     }
 
     fun updateRetouchingValue(option: RetouchingOption, newValue: Int) {
-        // 보정 값을 업데이트
         _retouchingValues.update { it.toMutableMap().apply { put(option, newValue) } }
-        Log.d("로그", "retouchedBitmap -> ${retouchedBitmap.value}")
 
         val bitmap = imageUri.value?.let { uri ->
             uriToBitmap(uri)
@@ -158,7 +154,7 @@ class RetouchingViewModel @Inject constructor(
 
         if (bitmap != null) {
             val edited = applyRetouching(bitmap, _retouchingValues.value)
-            _retouchedBitmap.value = edited // 보정된 비트맵 업데이트
+            _retouchedBitmap.value = edited
         } else {
             Log.e("로그", "이미지 로딩 실패")
         }
