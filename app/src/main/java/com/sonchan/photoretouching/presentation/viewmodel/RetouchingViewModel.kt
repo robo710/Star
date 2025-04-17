@@ -94,6 +94,9 @@ class RetouchingViewModel @Inject constructor(
                 RetouchingOption.CONTRAST -> {
                     ImageEditor.applyConstruct(result, value)
                 }
+                RetouchingOption.HIGHLIGHT -> {
+                    ImageEditor.applyHighlight(result, value)
+                }
                 else -> result
             }
         }
