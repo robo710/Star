@@ -85,7 +85,7 @@ object ImageEditor {
     }
 
     fun applyHighlight(bitmap: Bitmap, value: Int): Bitmap {
-        val highlightFactor = value / 100f
+        val highlightFactor = value / 150f
         val width = bitmap.width
         val height = bitmap.height
         val result = bitmap.copy(Bitmap.Config.ARGB_8888, true)
@@ -101,7 +101,7 @@ object ImageEditor {
             val b = (pixel and 0xFF).toFloat()
 
             // 밝기 계산: 밝은 영역만 선택
-            val brightness = (r + g + b) / 3
+            val brightness = (r + g + b) / 2.5
             val factor = if (brightness > 200) highlightFactor else 0f  // 밝은 영역만 강조
 
             // 하이라이트 효과 적용: 밝은 부분만 강조
