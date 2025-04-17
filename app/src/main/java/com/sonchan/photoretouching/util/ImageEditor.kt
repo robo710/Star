@@ -14,47 +14,33 @@ import com.sonchan.photoretouching.gpu.ExposureFilter
 import com.sonchan.photoretouching.gpu.HighlightFilter
 import com.sonchan.photoretouching.gpu.ShadowFilter
 import jp.co.cyberagent.android.gpuimage.GPUImage
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageBrightnessFilter
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageContrastFilter
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageExposureFilter
 
 object ImageEditor {
     fun applyBrightness(context: Context, bitmap: Bitmap, value: Int): Bitmap {
-        val brightness = value / 300f
+        val intensity = value / 100f
         val gpuImage = GPUImage(context)
         gpuImage.setImage(bitmap)
-        gpuImage.setFilter(BrightnessFilter(brightness))
+        gpuImage.setFilter(GPUImageBrightnessFilter(intensity))
         return gpuImage.bitmapWithFilterApplied
     }
 
     fun applyExposure(context: Context, bitmap: Bitmap, value: Int): Bitmap {
-        val exposure = value / 200f
+        val intensity = value / 100f
         val gpuImage = GPUImage(context)
         gpuImage.setImage(bitmap)
-        gpuImage.setFilter(ExposureFilter(exposure))
+        gpuImage.setFilter(GPUImageExposureFilter(intensity))
         return gpuImage.bitmapWithFilterApplied
     }
 
-    fun applyConstruct(bitmap: Bitmap, value: Int): Bitmap {
-        val result =
-            createBitmap(bitmap.width, bitmap.height, bitmap.config ?: Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(result)
-        val paint = Paint()
-
-        val construct = 1f + (value / 100f)
-        val translate = 128f * (1 - construct)
-
-        Log.d("로그", "construct value: $construct, translate value : $translate")
-
-        val colorMatrix = ColorMatrix(
-            floatArrayOf(
-                construct, 0f, 0f, 0f, translate,
-                0f, construct, 0f, 0f, translate,
-                0f, 0f, construct, 0f, translate,
-                0f, 0f, 0f, 1f, 0f
-            )
-        )
-
-        paint.colorFilter = ColorMatrixColorFilter(colorMatrix)
-        canvas.drawBitmap(bitmap, 0f, 0f, paint)
-        return result
+    fun applyContrast(context: Context, bitmap: Bitmap, value: Int): Bitmap {
+        val intensity = value / 100f
+        val gpuImage = GPUImage(context)
+        gpuImage.setImage(bitmap)
+        gpuImage.setFilter(GPUImageContrastFilter(intensity))
+        return gpuImage.bitmapWithFilterApplied
     }
 
     fun applyHighlight(context: Context, bitmap: Bitmap, value: Int): Bitmap {
