@@ -63,7 +63,7 @@ object ImageEditor {
     }
 
     fun applyTint(context: Context, bitmap: Bitmap, value: Int): Bitmap {
-        val intensity = (value + 100) / 200f
+        val intensity = value / 200f
         val gpuImage = GPUImage(context)
         gpuImage.setImage(bitmap)
         gpuImage.setFilter(TintFilter(intensity))
