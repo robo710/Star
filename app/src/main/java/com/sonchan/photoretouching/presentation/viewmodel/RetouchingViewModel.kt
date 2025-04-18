@@ -102,6 +102,9 @@ class RetouchingViewModel @Inject constructor(
                 RetouchingOption.SATURATION -> {
                     ImageEditor.applySaturation(context, result, value)
                 }
+                RetouchingOption.TINT -> {
+                    ImageEditor.applyTint(context, result, value)
+                }
                 else -> result
             }
         }
