@@ -105,6 +105,9 @@ class RetouchingViewModel @Inject constructor(
                 RetouchingOption.TINT -> {
                     ImageEditor.applyTint(context, result, value)
                 }
+                RetouchingOption.TEMPERATURE -> {
+                    ImageEditor.applyTemperature(context, result, value)
+                }
                 else -> result
             }
         }

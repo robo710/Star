@@ -11,6 +11,7 @@ import jp.co.cyberagent.android.gpuimage.filter.GPUImageBrightnessFilter
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageContrastFilter
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageExposureFilter
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageSaturationFilter
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageWhiteBalanceFilter
 
 object ImageEditor {
     fun applyBrightness(context: Context, bitmap: Bitmap, value: Int): Bitmap {
@@ -67,6 +68,14 @@ object ImageEditor {
         val gpuImage = GPUImage(context)
         gpuImage.setImage(bitmap)
         gpuImage.setFilter(TintFilter(intensity))
+        return gpuImage.bitmapWithFilterApplied
+    }
+
+    fun applyTemperature(context: Context, bitmap: Bitmap, value: Int): Bitmap{
+        val intensity = 5000f + value * 50f
+        val gpuImage = GPUImage(context)
+        gpuImage.setImage(bitmap)
+        gpuImage.setFilter(GPUImageWhiteBalanceFilter(intensity, 0f))
         return gpuImage.bitmapWithFilterApplied
     }
 }
