@@ -11,6 +11,7 @@ import jp.co.cyberagent.android.gpuimage.filter.GPUImageBrightnessFilter
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageContrastFilter
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageExposureFilter
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageSaturationFilter
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageSharpenFilter
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageWhiteBalanceFilter
 
 object ImageEditor {
@@ -76,6 +77,14 @@ object ImageEditor {
         val gpuImage = GPUImage(context)
         gpuImage.setImage(bitmap)
         gpuImage.setFilter(GPUImageWhiteBalanceFilter(intensity, 0f))
+        return gpuImage.bitmapWithFilterApplied
+    }
+
+    fun applySharpness(context: Context, bitmap: Bitmap, value: Int): Bitmap{
+        val intensity = value / 25f
+        val gpuImage = GPUImage(context)
+        gpuImage.setImage(bitmap)
+        gpuImage.setFilter(GPUImageSharpenFilter(intensity))
         return gpuImage.bitmapWithFilterApplied
     }
 }
