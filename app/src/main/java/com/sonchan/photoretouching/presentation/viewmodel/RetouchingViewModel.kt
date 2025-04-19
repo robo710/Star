@@ -108,6 +108,9 @@ class RetouchingViewModel @Inject constructor(
                 RetouchingOption.TEMPERATURE -> {
                     ImageEditor.applyTemperature(context, result, value)
                 }
+                RetouchingOption.SHARPNESS -> {
+                    ImageEditor.applySharpness(context, result, value)
+                }
                 else -> result
             }
         }
