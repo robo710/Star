@@ -47,6 +47,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.domain.model.ImageFormat
 import com.sonchan.photoretouching.domain.model.RetouchingOption
+import com.sonchan.photoretouching.presentation.component.BackOnPressed
 import com.sonchan.photoretouching.presentation.component.DarkThemeDevicePreview
 import com.sonchan.photoretouching.presentation.component.DevicePreviews
 import com.sonchan.photoretouching.presentation.component.ImageFormatDropDown
@@ -168,6 +169,7 @@ fun RetouchingScreen(
     resetRetouchingValue: (RetouchingOption) -> Unit,
     bitmap: Bitmap?,
 ) {
+    BackOnPressed()
     Column(
         modifier = modifier
             .fillMaxSize()
