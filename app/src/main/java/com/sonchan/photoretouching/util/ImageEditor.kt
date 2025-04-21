@@ -6,7 +6,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sonchan.photoretouching.gpu.ClarityFilter
 import com.sonchan.photoretouching.gpu.HighlightFilter
 import com.sonchan.photoretouching.gpu.ShadowFilter
-import com.sonchan.photoretouching.gpu.TintFilter
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageBrightnessFilter
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageContrastFilter
@@ -66,10 +65,10 @@ object ImageEditor {
     }
 
     fun applyTint(context: Context, bitmap: Bitmap, value: Int): Bitmap {
-        val intensity = value / 200f
+        val intensity = value.toFloat()
         val gpuImage = GPUImage(context)
         gpuImage.setImage(bitmap)
-        gpuImage.setFilter(TintFilter(intensity))
+        gpuImage.setFilter(GPUImageWhiteBalanceFilter(5000f, intensity))
         return gpuImage.bitmapWithFilterApplied
     }
 
