@@ -27,7 +27,7 @@ fun BackOnPressed(
 
     BackHandler(enabled = true) {
         // 만약 전에 뒤로가기 버튼 누른 시간과 특정한 시간 만큼 차이가 나지 않으면 앱종료.
-        if(System.currentTimeMillis() - backPressedTime <= 400L) {
+        if(System.currentTimeMillis() - backPressedTime <= 1000L) {
             (context as Activity).finish() // 앱 종료
         } else {
             // 특정한 시간 이상으로 차이가 난다면 토스트로 한 번 더 버튼을 누르라고 알림
