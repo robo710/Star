@@ -111,6 +111,9 @@ class RetouchingViewModel @Inject constructor(
                 RetouchingOption.SHARPNESS -> {
                     ImageEditor.applySharpness(context, result, value)
                 }
+                RetouchingOption.CLARITY -> {
+                    ImageEditor.applyClarity(context, result, value)
+                }
                 else -> result
             }
         }
