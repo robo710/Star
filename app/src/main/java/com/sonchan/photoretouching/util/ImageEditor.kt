@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sonchan.photoretouching.gpu.ClarityFilter
 import com.sonchan.photoretouching.gpu.HighlightFilter
+import com.sonchan.photoretouching.gpu.LightBalanceFilter
 import com.sonchan.photoretouching.gpu.ShadowFilter
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageBrightnessFilter
@@ -15,6 +16,14 @@ import jp.co.cyberagent.android.gpuimage.filter.GPUImageSharpenFilter
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageWhiteBalanceFilter
 
 object ImageEditor {
+    fun applyLightBalance(context: Context, bitmap: Bitmap, value: Int): Bitmap {
+        val intensity = value / 100f
+        val gpuImage = GPUImage(context)
+        gpuImage.setImage(bitmap)
+        gpuImage.setFilter(LightBalanceFilter(intensity))
+        return gpuImage.bitmapWithFilterApplied
+    }
+
     fun applyBrightness(context: Context, bitmap: Bitmap, value: Int): Bitmap {
         val intensity = value / 100f
         val gpuImage = GPUImage(context)
