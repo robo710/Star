@@ -2,7 +2,6 @@ package com.sonchan.photoretouching.util
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sonchan.photoretouching.gpu.ClarityFilter
 import com.sonchan.photoretouching.gpu.HighlightFilter
 import com.sonchan.photoretouching.gpu.LightBalanceFilter
