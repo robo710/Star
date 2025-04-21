@@ -87,4 +87,12 @@ object ImageEditor {
         gpuImage.setFilter(GPUImageSharpenFilter(intensity))
         return gpuImage.bitmapWithFilterApplied
     }
+
+    fun applyClarity(context: Context, bitmap: Bitmap, value: Int): Bitmap{
+        val intensity = value / 25f
+        val gpuImage = GPUImage(context)
+        gpuImage.setImage(bitmap)
+        gpuImage.setFilter(GPUImageSharpenFilter(intensity))
+        return gpuImage.bitmapWithFilterApplied
+    }
 }
