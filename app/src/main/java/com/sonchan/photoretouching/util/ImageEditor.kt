@@ -3,6 +3,7 @@ package com.sonchan.photoretouching.util
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sonchan.photoretouching.gpu.ClarityFilter
 import com.sonchan.photoretouching.gpu.HighlightFilter
 import com.sonchan.photoretouching.gpu.ShadowFilter
 import com.sonchan.photoretouching.gpu.TintFilter
@@ -89,10 +90,10 @@ object ImageEditor {
     }
 
     fun applyClarity(context: Context, bitmap: Bitmap, value: Int): Bitmap{
-        val intensity = value / 25f
+        val intensity = value / 100f
         val gpuImage = GPUImage(context)
         gpuImage.setImage(bitmap)
-        gpuImage.setFilter(GPUImageSharpenFilter(intensity))
+        gpuImage.setFilter(ClarityFilter(intensity))
         return gpuImage.bitmapWithFilterApplied
     }
 }
