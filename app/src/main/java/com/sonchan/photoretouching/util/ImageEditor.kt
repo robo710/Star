@@ -17,7 +17,7 @@ import jp.co.cyberagent.android.gpuimage.filter.GPUImageWhiteBalanceFilter
 
 object ImageEditor {
     fun applyLightBalance(context: Context, bitmap: Bitmap, value: Int): Bitmap {
-        val intensity = value / 200f
+        val intensity = value / 100f
         val gpuImage = GPUImage(context)
         gpuImage.setImage(bitmap)
         gpuImage.setFilter(LightBalanceFilter(intensity))
