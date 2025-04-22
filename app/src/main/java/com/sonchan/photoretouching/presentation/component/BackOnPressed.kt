@@ -34,7 +34,7 @@ fun BackOnPressed(
             RetouchingToast(context).showToast(
                 message = "한번 더 클릭시 앱이 종료됩니다.",
                 icon = R.drawable.splash_icon,
-                duration = Toast.LENGTH_SHORT,
+                duration = 1000,
                 isDarkTheme = isDarkTheme,
                 lifecycleOwner = lifecycleOwner,
                 viewModelStoreOwner = viewModelStoreOwner!!,

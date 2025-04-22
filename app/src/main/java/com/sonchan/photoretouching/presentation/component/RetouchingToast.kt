@@ -2,6 +2,8 @@ package com.sonchan.photoretouching.presentation.component
 
 import android.content.Context
 import android.content.res.Configuration
+import android.os.Handler
+import android.os.Looper
 import android.view.Gravity
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -97,7 +99,7 @@ class RetouchingToast(private val context: Context) {
             }
         }
 
-        Toast(context).apply {
+        val toast = Toast(context).apply {
             this.duration = duration
             this.view = composeView
             setGravity(
@@ -105,8 +107,14 @@ class RetouchingToast(private val context: Context) {
                 0, // xOffset
                 dpToPx(50 )// yOffset
             )
-            show()
         }
+
+
+        toast.show()
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            toast.cancel()
+        }, duration.toLong())
     }
 }
 
