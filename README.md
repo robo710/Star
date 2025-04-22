@@ -1,6 +1,6 @@
-# 📸 PhotoRetouching
+# 📸 Star
 
-PhotoRetouching은 Android Jetpack Compose 기반의 사진 보정 앱입니다.  
+Star 프로젝트는 Android Jetpack Compose 기반의 사진 보정 앱입니다.  
 사용자는 사진을 선택한 후 GPUImage 기반의 다양한 보정 필터를 적용하고 결과를 저장할 수 있습니다.
 
 ---
