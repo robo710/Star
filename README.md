@@ -51,12 +51,12 @@ PhotoRetouching은 Android Jetpack Compose 기반의 사진 보정 앱입니다.
 ---
 
 ## 📁 아키텍처 구조
-├── di // Hilt 모듈 
-├── domain // 비즈니스 로직 (UseCase, Repository Interface 등) 
-├── data // 데이터 처리 (Repository 구현, DataSource) 
-├── presentation // Compose UI 및 ViewModel 
-├── gpu // GPUImage 관련 커스텀 필터(GLSL 포함) 
-└── util // 공통 유틸 및 확장 함수
+├── di             # Hilt 모듈 
+├── domain         # 비즈니스 로직 (UseCase, Repository Interface 등) 
+├── data           # 데이터 처리 (Repository 구현, DataSource 등) 
+├── presentation   # Compose UI 및 ViewModel 
+├── gpu            # GPUImage 관련 커스텀 필터(GLSL 포함) 
+└── util           # 공통 유틸 및 확장 함수
 
 - ViewModel → `Map<RetouchingOption, Float>` 형태로 모든 보정 상태 통합 관리
 - `StateFlow`로 Compose에 반응형 상태 전달
