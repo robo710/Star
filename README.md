@@ -29,11 +29,11 @@ PhotoRetouching은 Android Jetpack Compose 기반의 사진 보정 앱입니다.
 ### 이미지 보정
 - **기본 보정 기능**
   - 밝기, 대비, 채도, 노출
-- **고급 보정 기능 (Custom Filter로 직접 구현)**
-  - 하이라이트 / 섀도우 조절
+- **고급 보정 기능**
+  - 하이라이트 / 섀도우 조절 (Custom Filter로 직접 구현)
   - **Tint** (보라 ↔ 초록 계열)
-  - **Clarity (명료도)** 조절
-  - **Light Balance (라이트 밸런스)** – 밝은 부분/어두운 부분 강조
+  - **Clarity (명료도)** 조절 (Custom Filter로 직접 구현)
+  - **Light Balance (라이트 밸런스)** – 밝은 부분/어두운 부분 강조 (Custom Filter로 직접 구현)
   - **Sharpness (선명도)** 조절
 - GPUImage 기반으로 고성능 실시간 필터 처리
 
