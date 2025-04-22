@@ -9,6 +9,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +29,7 @@ import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.sonchan.photoretouching.R
 import com.sonchan.photoretouching.presentation.component.RetouchingToastUtil.SetToast
 import com.sonchan.photoretouching.ui.theme.PhotoRetouchingTheme
@@ -50,6 +52,8 @@ object RetouchingToastUtil {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
+                modifier = modifier
+                    .size(24.dp),
                 painter = painterResource(id = icon),
                 contentDescription = "ToastIcon",
                 tint = Color.Unspecified,
