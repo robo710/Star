@@ -63,10 +63,10 @@ PhotoRetouching은 Android Jetpack Compose 기반의 사진 보정 앱입니다.
 
 ---
 
-##스크린샷
-
-(여기에 앱 UI 캡처 이미지 추가)
-![darkTheme](https://github.com/user-attachments/assets/a208e6a1-41f7-4834-9ca9-0e5df85a72b2) ![lightTheme](https://github.com/user-attachments/assets/5034571e-10e2-4b1d-a042-83970d61cb15)
+## 스크린샷
+| 다크 테마 | 라이트 테마 |
+|-----------|-------------|
+| ![dark](assets/dark.png) | ![light](assets/light.png) |
 
 ---
 
