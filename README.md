@@ -21,12 +21,12 @@ PhotoRetouching은 Android Jetpack Compose 기반의 사진 보정 앱입니다.
 
 ---
 
-## 🎨 주요 기능
+## 주요 기능
 
-### 📂 사진 선택
+### 사진 선택
 - 갤러리에서 사진을 선택하고 화면에 표시
 
-### 🛠 이미지 보정
+### 이미지 보정
 - **기본 보정 기능**
   - 밝기, 대비, 채도, 노출
 - **고급 보정 기능 (Custom Filter로 직접 구현)**
@@ -36,15 +36,15 @@ PhotoRetouching은 Android Jetpack Compose 기반의 사진 보정 앱입니다.
   - **Light Balance (라이트 밸런스)** – 밝은 부분/어두운 부분 강조
 - GPUImage 기반으로 고성능 실시간 필터 처리
 
-### 💾 결과 저장
-- JPG/PNG 포맷으로 저장
+### 결과 저장
+- JPG/PNG/WEBP 포맷으로 저장
 - 사용자 선택 저장 옵션 제공
 
-### 🧩 사용자 경험(UI/UX)
-- 삼성 갤럭시 갤러리 스타일의 RetouchingSlider
+### 사용자 경험(UI/UX)
 - LazyRow로 보정 옵션을 수평 스크롤로 선택
 - Compose 기반의 커스텀 토스트 (`RetouchingToast`)
 - 다크모드 대응
+- 메인화면에서 종료 여부 확인 후 종료
 
 ---
 
@@ -64,8 +64,7 @@ PhotoRetouching은 Android Jetpack Compose 기반의 사진 보정 앱입니다.
 ##스크린샷
 
 (여기에 앱 UI 캡처 이미지 추가)
-![darkTheme](https://github.com/user-attachments/assets/eaea81a3-a6a8-446b-9dbb-8a3a5ebc9a49)
-![lightTheme](https://github.com/user-attachments/assets/056821e8-8f7f-4eaf-acee-5730e0370f42)
+![darkTheme](https://github.com/user-attachments/assets/a208e6a1-41f7-4834-9ca9-0e5df85a72b2) ![lightTheme](https://github.com/user-attachments/assets/5034571e-10e2-4b1d-a042-83970d61cb15)
 
 ---
 
