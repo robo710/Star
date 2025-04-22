@@ -13,7 +13,7 @@ Star 프로젝트는 Android Jetpack Compose 기반의 사진 보정 앱입니�
   - MVVM + Clean Architecture
 
 - **라이브러리 및 도구**
-  - GPUImage for Android (CyberAgent)
+  - GPUImage for Android
   - Hilt (DI)
   - Coil (이미지 로딩)
   - Custom OpenGL Shaders
