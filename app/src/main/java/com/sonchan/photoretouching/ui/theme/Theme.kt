@@ -29,19 +29,28 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF000000),
 )
 
+private val PinkColorScheme = lightColorScheme(
+    primary = Color(0xFFFFC0CB),
+    onPrimary = Color(0xFF000000),
+    background = Color(0xFFFFF0F5),
+    onBackground = Color(0xFF000000),
+    surface = Color(0xFFFFE4E1),
+    onSurface = Color(0xFF000000)
+)
+
 @Composable
 fun PhotoRetouchingTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
+    pinkTheme: Boolean = false,
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
+        pinkTheme -> PinkColorScheme
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
