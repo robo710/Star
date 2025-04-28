@@ -76,6 +76,8 @@ dependencies {
 
     implementation(libs.gpuimage) // GPUImage 의존성 추가
 
+    implementation(libs.accompanist.permissions) // 권한 요청 관련 의존성 추가
+
 }
 
 // Kapt 설정 추가
