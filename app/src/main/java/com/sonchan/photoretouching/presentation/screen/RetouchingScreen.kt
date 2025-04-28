@@ -1,5 +1,11 @@
 package com.sonchan.photoretouching.presentation.screen
 
+import android.Manifest
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.core.content.ContextCompat
+import android.content.pm.PackageManager
+import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import android.graphics.Bitmap
 import android.net.Uri
 import android.widget.Toast
@@ -93,6 +99,16 @@ fun RetouchingRoute(
         }
     }
 
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            galleryLauncher.launch("image/*")
+        } else {
+            Toast.makeText(context, "갤러리 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     RetouchingOption.entries.forEach { option ->
         if (!sliderStates.contains(option)) {
             sliderStates[option] = rememberLazyListState()
@@ -101,7 +117,17 @@ fun RetouchingRoute(
 
     LaunchedEffect(Unit) {
         viewModel.openGalleryEvent.collect {
-            galleryLauncher.launch("image/*")
+            when (PackageManager.PERMISSION_GRANTED) {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.READ_MEDIA_IMAGES
+                ) -> {
+                    galleryLauncher.launch("image/*")
+                }
+                else -> {
+                    permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                }
+            }
         }
     }
 
