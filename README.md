@@ -50,7 +50,7 @@ Star 프로젝트는 Android Jetpack Compose 기반의 사진 보정 앱입니�
 
 ---
 
-## 📁 아키텍처 구조
+## 📁 프로젝트 구조
 ```
 ├── di             # Hilt 모듈 
 ├── domain         # 비즈니스 로직 (UseCase, Repository Interface 등) 
